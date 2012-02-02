@@ -7,13 +7,13 @@
             body { height: 100%; margin: 0; padding: 0 }
             #map_canvas { height: 100% }
         </style>
-        <script type="text/javascript" src="maplabel.js"></script>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
         </script>    
         <script type="text/javascript"
             src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
         </script>
+        <script type="text/javascript" src="maplabel.min.js"></script>
         <script type="text/javascript">
             function initialize() {
                 var stylesArray = [
@@ -66,12 +66,22 @@
                     else {
                         icon = 'rectangle.png';                    
                     }
+                    lat = router.position[0];
+                    lng = router.position[1];
                     var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(router.position[0], router.position[1]),
+                        position: new google.maps.LatLng(lat, lng),
                         map: map,
-                        title: router.title,
+                        title: router.description,
                         icon: icon
                     });
+                    var mapLabel = new MapLabel({
+                        text: router.title,
+                        position: new google.maps.LatLng(lat-.1, lng),
+                        map: map,
+                        fontSize: 13,
+                        align: 'center',
+                    });
+
                     google.maps.event.addListener(marker, 'click', function() {
                         alert(router.title + ': ' + router.description);
                     });
