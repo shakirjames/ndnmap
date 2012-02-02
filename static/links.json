@@ -1,0 +1,82 @@
+[
+    {
+        "start": "Salt Lake City",
+        "end": "UCLA"
+    },
+    {
+        "start": "Salt Lake City",
+        "end": "Kansas"
+    },
+    {
+        "start": "Salt Lake City",
+        "end": "Houston"
+    },
+    {
+        "start": "Houston",
+        "end": "Kansas"
+    },
+    {
+        "start": "Houston",
+        "end": "Atlanta"
+    },
+    {
+        "start": "Kansas",
+        "end": "Atlanta"
+    },
+    {
+        "start": "Kansas",
+        "end": "Washington DC"
+    },
+    {
+        "start": "Washington DC",
+        "end": "Atlanta"
+    },
+    {
+        "start": "PARC",
+        "end": "UCLA"
+    },
+    {
+        "start": "UCLA",
+        "end": "UCI"
+    },
+    {
+        "start": "UCLA",
+        "end": "UCI"
+    },
+    {
+        "start": "UCI",
+        "end": "UCSD"
+    },
+    {
+        "start": "UCI",
+        "end": "UCLA"
+    },
+    {
+        "start": "Arizona",
+        "end": "Houston"
+    },
+    {
+        "start": "Memphis",
+        "end": "Atlanta"
+    },
+    {
+        "start": "Memphis",
+        "end": "Atlanta"
+    },
+    {
+        "start": "Colorado",
+        "end": "Salt Lake City"
+    },
+    {
+        "start": "WashU",
+        "end": "Kansas"
+    },
+    {
+        "start": "UIUC",
+        "end": "Kansas"
+    },
+    {
+        "start": "NEU",
+        "end": "Washington DC"
+    }
+]

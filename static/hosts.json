@@ -1,0 +1,125 @@
+[
+    {
+        "router": "UCSD",
+        "offset": [ -2, -1 ]
+    },
+    {
+        "router": "UCSD",
+        "offset": [ -2, 0 ]
+    },
+    {
+        "router": "UCSD",
+        "offset": [ -2, 1 ]
+    },
+    {
+        "router": "UCI",
+        "_offset": [ 1, 2 ],
+        "offset": [ 2, -1 ]
+    },
+    {
+        "router": "UCI",
+        "_offset": [ 0, 2 ],
+        "offset": [ 2, 0 ]
+    },
+    {
+        "router": "UCI",
+        "_offset": [ -1, 2 ],
+        "offset": [ 2, 1 ]
+    },
+    {
+        "router": "UCLA",
+        "offset": [ -2, -1 ]
+    },
+    {
+        "router": "UCLA",
+        "offset": [ -2, 0 ]
+    },
+    {
+        "router": "UCLA",
+        "offset": [ -2, 1 ]
+    },
+    {
+        "router": "PARC",
+        "offset": [ 2, -1 ]
+    },
+    {
+        "router": "PARC",
+        "offset": [ 2, 0 ]
+    },
+    {
+        "router": "PARC",
+        "offset": [ 2, 1 ]
+    },
+    {
+        "router": "Arizona",
+        "offset": [ -2, -1 ]
+    },
+    {
+        "router": "Arizona",
+        "offset": [ -2, 0 ]
+    },
+    {
+        "router": "Arizona",
+        "offset": [ -2, 1 ]
+    },
+    {
+        "router": "Colorado",
+        "offset": [ 2, -1 ]
+    },
+    {
+        "router": "Colorado",
+        "offset": [ 2, 0 ]
+    },
+    {
+        "router": "Colorado",
+        "offset": [ 2, 1 ]
+    },
+    {
+        "router": "Memphis",
+        "offset": [ -2, -1 ]
+    },
+    {
+        "router": "Memphis",
+        "offset": [ -2, 0 ]
+    },
+    {
+        "router": "Memphis",
+        "offset": [ -2, 1 ]
+    },
+    {
+        "router": "WashU",
+        "offset": [ -2, -1 ]
+    },
+    {
+        "router": "WashU",
+        "offset": [ -2, 0 ]
+    },
+    {
+        "router": "WashU",
+        "offset": [ -2, 1 ]
+    },
+    {
+        "router": "UIUC",
+        "offset": [ 2, -1 ]
+    },
+    {
+        "router": "UIUC",
+        "offset": [ 2, 0 ]
+    },
+    {
+        "router": "UIUC",
+        "offset": [ 2, 1 ]
+    },
+    {
+        "router": "NEU",
+        "offset": [ 2, -1 ]
+    },
+    {
+        "router": "NEU",
+        "offset": [ 2, 0 ]
+    },
+    {
+        "router": "NEU",
+        "offset": [ 2, 1 ]
+    }
+]

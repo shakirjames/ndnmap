@@ -1,92 +1,17 @@
 [
-    {
-        "title": "Arizona",
-        "description": "The University of Arizona",
-        "backbone": false,
-        "position": [ 32.22896140, -110.94832260 ]
-    },
-    {
-        "title": "Atlanta",
-        "description": "Atlanta SPP Node",
-        "backbone": true,
-        "position": [ 33.74899540, -84.38798240 ]
-    },
-    {
-        "title": "Colorado",
-        "description": "Colorado State University",
-        "backbone": false,
-        "position": [ 40.57471750, -105.08482930 ]
-    },
-    {
-        "title": "Kansas",
-        "description": "Kansas City SPP Node",
-        "backbone": true,
-        "position": [ 39.09972650, -94.57856670 ]
-    },
-    {
-        "title": "Houston",
-        "description": "Houston SPP Node",
-        "backbone": true,
-        "position": [ 29.76019270, -95.36938959999999 ]
-    },
-    {
-        "title": "Memphis",
-        "description": "University of Memphis",
-        "backbone": false,
-        "position": [ 35.11860990, -89.93700109999999 ]
-    }, 
-    {
-        "title": "NEU",
-        "description": "Northeastern University",
-        "backbone": false,        
-        "position": [ 42.33987830, -71.08873579999999 ]
-    },
-    {
-        "title": "PARC",
-        "description": "Palo Alto Research Center (PARC)",
-        "backbone": false,
-        "position": [ 37.40213770, -122.14807210 ]
-    },
-    {
-        "title": "Salt Lake City",
-        "description": "Salt Lake City SPP Node",
-        "backbone": true,
-        "position": [ 40.76077930, -111.89104740 ]
-    },
-    {
-        "title": "UCI",
-        "description": "University of California Irvine",
-        "backbone": false,
-        "position": [ 33.6649250, -117.8537750 ]
-    },
-    {
-        "title": "UIUC",
-        "description": "University of Illinois, Urbana-Champaign",
-        "backbone": false,
-        "position": [ 40.10260390, -88.23171080000002 ]
-    },
-    {
-        "title": "UCLA",
-        "description": "University of California, Los Angeles",
-        "backbone": false,
-        "position": [ 34.07282250, -118.43873980 ]
-    },
-    {
-        "title": "UCSD",
-        "description": "University of California San Diego",
-        "backbone": false,
-        "position": [ 32.87357720, -117.23781110 ]
-    },
-    {
-        "title": "Washington DC",
-        "description": "Washington DC SPP Node",
-        "backbone": true,
-        "position": [ 38.89511180, -77.03636580 ]
-    },
-    {
-        "title": "WashU",
-        "description": "Washington University in St. Louis",
-        "backbone": false,
-        "position": [ 38.64907010, -90.30334710 ]
-    }
+    "Arizona",
+    "Atlanta",
+    "Colorado",
+    "Kansas",
+    "Houston",
+    "Memphis",
+    "NEU",
+    "PARC",
+    "Salt Lake City",
+    "UCI",
+    "UIUC",
+    "UCLA",
+    "UCSD",
+    "Washington DC",
+    "WashU"
 ]

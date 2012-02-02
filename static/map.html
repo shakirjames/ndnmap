@@ -56,43 +56,108 @@
             };
             var map = new google.maps.Map($("#map_canvas")[0], myOptions);
             map.setOptions({styles: stylesArray});
-
-            $.getJSON('routers.json', function(routers) {
-                $(routers).each(function() {
-                    var router = this;
-                    if (router.backbone == true) {
-                        icon = 'circle.png';
-                    } 
-                    else {
-                        icon = 'rectangle.png';                    
-                    }
-                    lat = router.position[0];
-                    lng = router.position[1];
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(lat, lng),
-                        map: map,
-                        title: router.description,
-                        icon: icon
+            var infowindow = new google.maps.InfoWindow();
+            $.get("geocode.json" , function(geocode) {
+                // build gecode lookup table
+                var geocode = jQuery.parseJSON(geocode);
+                // add routers
+                $.getJSON('routers.json', function(routers) {
+                    $(routers).each(function() {
+                        var router = geocode[this];
+                        if (router.backbone == true) {
+                            icon = 'circle.png';
+                        } 
+                        else {
+                            icon = 'rectangle.png';                    
+                        }
+                        lat = router.position[0];
+                        lng = router.position[1];
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, lng),
+                            map: map,
+                            title: router.description,
+                            icon: icon
+                        });
+                        var mapLabel = new MapLabel({
+                            text: router.shortname,
+                            position: new google.maps.LatLng(lat-.1, lng),
+                            map: map,
+                            fontSize: 13,
+                            align: 'center',
+                        });
+                        var contentString = '<div id="content">'+
+                                             '<h1>' + router.name + '</h1>' +
+                                             '<p> ndnstat </p>' +
+                                             '</div>';
+                        //var infowindow = new google.maps.InfoWindow(); // multiple infowindows
+                        google.maps.event.addListener(marker, 'click', function() {
+                            infowindow.setContent(contentString)
+                            infowindow.open(map, marker);
+                        });
                     });
-                    var mapLabel = new MapLabel({
-                        text: router.title,
-                        position: new google.maps.LatLng(lat-.1, lng),
-                        map: map,
-                        fontSize: 13,
-                        align: 'center',
+                });
+                // add links
+                $.getJSON('links.json', function(links) {
+                    $(links).each(function() {
+                        var link = this;
+                        var start = geocode[link.start]
+                        var end = geocode[link.end]
+                        var linkCoordinates = [
+                            new google.maps.LatLng(start.position[0]+.1, start.position[1]),
+                            new google.maps.LatLng(end.position[0]+.1, end.position[1]),                        
+                        ];
+                        var linkColor = "#4592B7";
+                        if (start.backbone == true  && end.backbone == true) {
+                            linkColor = "#5DA31D";
+                        }
+                        var linkPath = new google.maps.Polyline({
+                          path: linkCoordinates,
+                          strokeColor: linkColor,
+                          map: map,
+                          strokeOpacity: 0.6,
+                          strokeWeight: 4
+                        });
+                        var contentString = '<div id="content">'+
+                                             '<h1>' + start.shortname + ' - ' +
+                                             end.shortname + '</h1>' +
+                                             '<p> stats </p>' +
+                                             '</div>';
+                        google.maps.event.addListener(linkPath, 'click', function(event) {
+                            infowindow.setPosition(event.latLng);
+                            infowindow.setContent(contentString)
+                            infowindow.open(map);
+                        });
                     });
-                    var contentString = '<div id="content">'+
-                        '<h1>' + router.title + '</h1>' +
-                        '<p>' + router.description + '</p>' +
-                        '</div>';
-                    var infowindow = new google.maps.InfoWindow({
-                        content: contentString 
-                    });
-                    google.maps.event.addListener(marker, 'click', function() {
-                        infowindow.open(map, marker);
+                });
+                // add hosts
+                $.getJSON('hosts.json', function(hosts) {
+                    $(hosts).each(function() {
+                        var host = this;
+                        var router = geocode[host.router]
+                        lat = host.offset[0] + router.position[0]
+                        lng = host.offset[1] + router.position[1]
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, lng),
+                            map: map,
+                            icon: "triangle.png"
+                        });
+                        var start = router.position
+                        var end = [lat, lng]
+                        var linkCoordinates = [
+                            new google.maps.LatLng(start[0]+.1, start[1]),
+                            new google.maps.LatLng(end[0]+.1, end[1]),                        
+                        ];
+                        var linkPath = new google.maps.Polyline({
+                          path: linkCoordinates,
+                          strokeColor: "#4592B7",
+                          map: map,
+                          strokeOpacity: 0.6,
+                          strokeWeight: 1
+                        });
                     });
                 });
             });
+            
         }
         </script>
     </head>
