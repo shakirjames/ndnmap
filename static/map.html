@@ -45,7 +45,7 @@
             },{
             }
           ]
-        var us = new google.maps.LatLng(38.6,-96.5);
+        var us = new google.maps.LatLng(38.6,-96.1);
         var myOptions = {
             zoom: 5,
             center: us,
@@ -62,16 +62,47 @@
         $.getJSON('routers.json', function(routers) {
             $(routers).each(function() {
                 var router = this;
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(router.position[0], router.position[1]),
-                    map:      map,
-                    title:    router.title,
-                //icon:     'http://google-maps-icons.googlecode.com/files/train.png'
-                });
-                
-                google.maps.event.addListener(marker, 'click', function() {
+                if (router.backbone == true) {
+                    // construct a circle for each backbone router
+                    var polygon = new google.maps.Circle({
+                        strokeColor: "#921622",
+                        strokeOpacity: 1,
+                        strokeWeight: 2,
+                        fillColor: "#922916",
+                        fillOpacity: .8,
+                        map: map,
+                        radius: 50000,
+                        center: new google.maps.LatLng(router.position[0], router.position[1]),
+                    });
+                } 
+                else {
+                    // construct the rectange for each non-backbone router
+                    var sw = new google.maps.LatLng(router.position[0], router.position[1]);
+                    var ne = new google.maps.LatLng(router.position[0]+.8, router.position[1]+1);
+                    var polygon = new google.maps.Rectangle({
+                        strokeColor: "#2F6179",
+                        strokeOpacity: 1,
+                        strokeWeight: 1,
+                        fillColor: "#4693B8",
+                        fillOpacity: .8,
+                        map: map,
+                        bounds: new google.maps.LatLngBounds(sw, ne),
+                    });
+                }
+                google.maps.event.addListener(polygon, 'click', function() {
                     alert(router.title + ': ' + router.description);
                 });
+                
+                // var marker = new google.maps.Marker({
+                //     position: new google.maps.LatLng(router.position[0], router.position[1]),
+                //     map:      map,
+                //     title:    router.title,
+                // //icon:     'http://google-maps-icons.googlecode.com/files/train.png'
+                // });
+                
+                // google.maps.event.addListener(marker, 'click', function() {
+                //     alert(router.title + ': ' + router.description);
+                // });
             });
         });
 
