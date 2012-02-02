@@ -81,9 +81,15 @@
                         fontSize: 13,
                         align: 'center',
                     });
-
+                    var contentString = '<div id="content">'+
+                        '<h1>' + router.title + '</h1>' +
+                        '<p>' + router.description + '</p>' +
+                        '</div>';
+                    var infowindow = new google.maps.InfoWindow({
+                        content: contentString 
+                    });
                     google.maps.event.addListener(marker, 'click', function() {
-                        alert(router.title + ': ' + router.description);
+                        infowindow.open(map, marker);
                     });
                 });
             });
