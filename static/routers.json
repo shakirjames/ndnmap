@@ -1,0 +1,52 @@
+[
+    {
+        "title": "Arizona",
+        "description": "The University of Arizona",
+        "position": [ 32.22896140, -110.94832260 ]
+    },
+    {
+        "title": "Colorado",
+        "description": "Colorado State University",
+        "position": [ 40.57471750, -105.08482930 ]
+    },
+    {
+        "title": "Memphis",
+        "description": "University of Memphis",
+        "position": [ 35.11860990, -89.93700109999999 ]
+    }, 
+    {
+        "title": "NEU",
+        "description": "Northeastern University",
+        "position": [ 42.33987830, -71.08873579999999 ]
+    },
+    {
+        "title": "PARC",
+        "description": "Palo Alto Research Center (PARC)",
+        "position": [ 37.40213770, -122.14807210 ]
+    },
+    {
+        "title": "UCI",
+        "description": "University of California Irvine",
+        "position": [ 33.6649250, -117.8537750 ]
+    },
+    {
+        "title": "UIUC",
+        "description": "University of Illinois, Urbana-Champaign",
+        "position": [ 40.10260390, -88.23171080000002 ]
+    },
+    {
+        "title": "UCLA",
+        "description": "University of California, Los Angeles",
+        "position": [ 34.07282250, -118.43873980 ]
+    },
+    {
+        "title": "UCSD",
+        "description": "University of California San Diego",
+        "position": [ 32.87357720, -117.23781110 ]
+    },
+    {
+        "title": "WashU",
+        "description": "Washington University in St. Louis",
+        "position": [ 38.64907010, -90.30334710 ]
+    }
+]
