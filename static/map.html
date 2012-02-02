@@ -1,89 +1,86 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas { height: 100% }
-    </style>
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
-    </script>    
-    <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
-    </script>
-    <script type="text/javascript">
-      function initialize() {
-          var stylesArray = [
-            {
-              featureType: "road",
-              stylers: [
-                { visibility: "off" }
-              ]
-            },{
-              featureType: "transit",
-              stylers: [
-                { visibility: "off" }
-              ]
-            },{
-              featureType: "poi",
-              stylers: [
-                { visibility: "off" }
-              ]
-            },{
-              featureType: "administrative",
-              stylers: [
-                { visibility: "simplified" }
-              ]
-            },{
-              featureType: "administrative",
-              elementType: "labels",
-              stylers: [
-                { visibility: "off" }
-              ]
-            },{
-            }
-          ]
-        var us = new google.maps.LatLng(38.6,-96.6);
-        var myOptions = {
-            zoom: 5,
-            center: us,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map($("#map_canvas")[0],
-            myOptions);
-        map.setOptions({styles: stylesArray});
-        
-        
-        $.getJSON('routers.json', function(routers) {
-            $(routers).each(function() {
-                var router = this;
-                if (router.backbone == true) {
-                    icon = 'circle.png';
-                } 
-                else {
-                    icon = 'rectangle.png';                    
-                }
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(router.position[0], router.position[1]),
-                    map: map,
-                    title: router.title,
-                    icon: icon
-                });
-                google.maps.event.addListener(marker, 'click', function() {
-                    alert(router.title + ': ' + router.description);
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+            <style type="text/css">
+            html { height: 100% }
+            body { height: 100%; margin: 0; padding: 0 }
+            #map_canvas { height: 100% }
+        </style>
+        <script type="text/javascript" src="maplabel.js"></script>
+        <script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
+        </script>    
+        <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
+        </script>
+        <script type="text/javascript">
+            function initialize() {
+                var stylesArray = [
+                    {
+                        featureType: "road",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    },{
+                        featureType: "transit",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    },{
+                        featureType: "poi",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    },{
+                        featureType: "administrative",
+                        stylers: [
+                            { visibility: "simplified" }
+                        ]
+                    },{
+                        featureType: "administrative",
+                        elementType: "labels",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    }
+                ]
+            var us = new google.maps.LatLng(38.6,-96.6);
+            var myOptions = {
+                zoom: 5,
+                center: us,
+                mapTypeControl: false,
+                scaleControl: false,
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map($("#map_canvas")[0], myOptions);
+            map.setOptions({styles: stylesArray});
+
+            $.getJSON('routers.json', function(routers) {
+                $(routers).each(function() {
+                    var router = this;
+                    if (router.backbone == true) {
+                        icon = 'circle.png';
+                    } 
+                    else {
+                        icon = 'rectangle.png';                    
+                    }
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(router.position[0], router.position[1]),
+                        map: map,
+                        title: router.title,
+                        icon: icon
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                        alert(router.title + ': ' + router.description);
+                    });
                 });
             });
-        });
-      }
-      
-    </script>
-  </head>
-  <body onload="initialize()">
-    <div id="map_canvas" style="width:100%; height:100%"></div>
-  </body>
+        }
+        </script>
+    </head>
+    <body onload="initialize()">
+        <div id="map_canvas" style="width:100%; height:100%"></div>
+    </body>
 </html>
