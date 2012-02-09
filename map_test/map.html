@@ -13,7 +13,8 @@
         <script type="text/javascript"
             src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
         </script>
-        <script type="text/javascript" src="maplabel.min.js"></script>
+        <script type="text/javascript" src="static/jquery.timers.min.js"></script>        
+        <script type="text/javascript" src="static/maplabel.min.js"></script>
         <script type="text/javascript">
             function initialize() {
                 var stylesArray = [
@@ -65,10 +66,10 @@
                     $(routers).each(function() {
                         var router = geocode[this];
                         if (router.backbone == true) {
-                            icon = 'circle.png';
+                            icon = 'static/circle.png';
                         } 
                         else {
-                            icon = 'rectangle.png';                    
+                            icon = 'static/rectangle.png';                    
                         }
                         lat = router.position[0];
                         lng = router.position[1];
@@ -97,6 +98,9 @@
                     });
                 });
                 // add links
+                var start_time = new Date().getTime() / 1000; // TODO remove
+                var animate_links = true; // TODO remove
+                var animate_labels = true; // TODO remove
                 $.getJSON('links.json', function(links) {
                     $(links).each(function() {
                         var link = this;
@@ -106,10 +110,15 @@
                             new google.maps.LatLng(start.position[0]+.1, start.position[1]),
                             new google.maps.LatLng(end.position[0]+.1, end.position[1]),                        
                         ];
+                        var linkCenterCoordinates = new google.maps.LatLng(
+                                (start.position[0] + end.position[0])/2,
+                                (start.position[1] + end.position[1])/2
+                        );
                         var linkColor = "#4592B7";
                         if (start.backbone == true  && end.backbone == true) {
                             linkColor = "#5DA31D";
                         }
+                        // link
                         var linkPath = new google.maps.Polyline({
                           path: linkCoordinates,
                           strokeColor: linkColor,
@@ -117,6 +126,28 @@
                           strokeOpacity: 0.6,
                           strokeWeight: 4
                         });
+                        // traffic label
+                        var label = new MapLabel({
+                            text: '',
+                            position: linkCenterCoordinates,
+                            map: map,
+                            fontSize: 18,
+                            align: 'center',
+                        });
+                        // timers
+                        if (animate_links==true) { 
+                            $(document).everyTime(500, function (i) {
+                                var randn=Math.floor(Math.random()*10)+1 // 1--10
+                                linkPath.set('strokeWeight', randn);
+                            }, 0);
+                        }
+                        if (animate_labels==true) {
+                            $(document).everyTime(500, function (i) {
+                                    var elapsed = (new Date().getTime() / 1000) - start_time;
+                                    label.set('text', (Math.round(elapsed*10)/10).toString());
+                            }, 0);
+                        }
+                        // infowindow
                         var contentString = '<div id="content">'+
                                              '<h1>' + start.shortname + ' - ' +
                                              end.shortname + '</h1>' +
@@ -139,7 +170,7 @@
                         var marker = new google.maps.Marker({
                             position: new google.maps.LatLng(lat, lng),
                             map: map,
-                            icon: "triangle.png"
+                            icon: "static/triangle.png"
                         });
                         var start = router.position
                         var end = [lat, lng]
