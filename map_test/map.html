@@ -4,7 +4,7 @@
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
             <style type="text/css">
             html { height: 100% }
-            body { height: 100%; margin: 0; padding: 0 }
+            body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
             #map_canvas { height: 100% }
         </style>
         <script type="text/javascript"
@@ -86,9 +86,8 @@
                             fontSize: 13,
                             align: 'center',
                         });
-                        var contentString = '<div id="content">'+
+                        var contentString = '<div class="info-content">'+
                                              '<h1>' + router.name + '</h1>' +
-                                             '<p> ndnstat </p>' +
                                              '</div>';
                         //var infowindow = new google.maps.InfoWindow(); // multiple infowindows
                         google.maps.event.addListener(marker, 'click', function() {
@@ -101,6 +100,8 @@
                 var start_time = new Date().getTime() / 1000; // TODO remove
                 var animate_links = true; // TODO remove
                 var animate_labels = true; // TODO remove
+                var linkColorActive = "#912815";
+                var linkColorInactive = "#333333";                        
                 $.getJSON('links.json', function(links) {
                     $(links).each(function() {
                         var link = this;
@@ -114,14 +115,14 @@
                                 (start.position[0] + end.position[0])/2,
                                 (start.position[1] + end.position[1])/2
                         );
-                        var linkColor = "#4592B7";
-                        if (start.backbone == true  && end.backbone == true) {
-                            linkColor = "#5DA31D";
-                        }
+                        // var linkColor = "#4592B7";
+                        // if (start.backbone == true  && end.backbone == true) {
+                        //     linkColor = "#5DA31D";
+                        // }
                         // link
                         var linkPath = new google.maps.Polyline({
                           path: linkCoordinates,
-                          strokeColor: linkColor,
+                          strokeColor: linkColorInactive,
                           map: map,
                           strokeOpacity: 0.6,
                           strokeWeight: 4
@@ -139,6 +140,12 @@
                             $(document).everyTime(500, function (i) {
                                 var randn=Math.floor(Math.random()*10)+1 // 1--10
                                 linkPath.set('strokeWeight', randn);
+                                if (randn > 5) {
+                                    linkPath.set('strokeColor', linkColorActive);
+                                }
+                                else {
+                                    linkPath.set('strokeColor', linkColorInactive);
+                                }
                             }, 0);
                         }
                         if (animate_labels==true) {
@@ -148,7 +155,7 @@
                             }, 0);
                         }
                         // infowindow
-                        var contentString = '<div id="content">'+
+                        var contentString = '<div class="info-content">'+
                                              '<h1>' + start.shortname + ' - ' +
                                              end.shortname + '</h1>' +
                                              '<p> stats </p>' +
