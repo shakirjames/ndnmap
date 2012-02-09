@@ -65,20 +65,24 @@
                     var region = this;
                     lat = region.position[0];
                     lng = region.position[1];
-
-                    var triangleCoords = [
-                       new google.maps.LatLng(lat, lng-1.5),
-                       new google.maps.LatLng(lat-1, lng+1),
-                       new google.maps.LatLng(lat+1, lng+1),
-                       new google.maps.LatLng(lat, lng-1.5)
-                     ];
+                    
+                    var paths = [];
+                    for (var i = 0; i < region.paths.length; i++) {
+                       paths[i] = new google.maps.LatLng(region.paths[i].lat, region.paths[i].lng);
+                    }
+                    // var triangleCoords = [
+                    //    new google.maps.LatLng(lat, lng-1.5),
+                    //    new google.maps.LatLng(lat-1, lng+1),
+                    //    new google.maps.LatLng(lat+1, lng+1),
+                    //    new google.maps.LatLng(lat, lng-1.5)
+                    //  ];
                     var polygon = new google.maps.Polygon({
-                        paths: triangleCoords,
+                        paths: paths,
                         strokeColor: "#E9BC14",
-                        strokeOpacity: 0.8,
+                        strokeOpacity: 0.5,
                         strokeWeight: 1,
                         fillColor: "#E9BC14",
-                        fillOpacity: .5,
+                        fillOpacity: 0.2,
                         map: map
                     });                    
                     // var marker = new google.maps.Marker({
@@ -198,32 +202,32 @@
                     });
                 });
                 // add hosts
-                // $.getJSON('hosts.json', function(hosts) {
-                //     $(hosts).each(function() {
-                //         var host = this;
-                //         var router = geocode[host.router]
-                //         lat = host.offset[0] + router.position[0]
-                //         lng = host.offset[1] + router.position[1]
-                //         var marker = new google.maps.Marker({
-                //             position: new google.maps.LatLng(lat, lng),
-                //             map: map,
-                //             icon: "static/triangle.png"
-                //         });
-                //         var start = router.position
-                //         var end = [lat, lng]
-                //         var linkCoordinates = [
-                //             new google.maps.LatLng(start[0]+.1, start[1]),
-                //             new google.maps.LatLng(end[0]+.1, end[1]),                        
-                //         ];
-                //         var linkPath = new google.maps.Polyline({
-                //           path: linkCoordinates,
-                //           strokeColor: "#4592B7",
-                //           map: map,
-                //           strokeOpacity: 0.6,
-                //           strokeWeight: 1
-                //         });
-                //     });
-                // });
+                $.getJSON('hosts.json', function(hosts) {
+                    $(hosts).each(function() {
+                        var host = this;
+                        var router = geocode[host.router]
+                        lat = host.offset[0] + router.position[0]
+                        lng = host.offset[1] + router.position[1]
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, lng),
+                            map: map,
+                            icon: "static/triangle.png"
+                        });
+                        var start = router.position
+                        var end = [lat, lng]
+                        var linkCoordinates = [
+                            new google.maps.LatLng(start[0]+.1, start[1]),
+                            new google.maps.LatLng(end[0]+.1, end[1]),                        
+                        ];
+                        var linkPath = new google.maps.Polyline({
+                          path: linkCoordinates,
+                          strokeColor: "#4592B7",
+                          map: map,
+                          strokeOpacity: 0.6,
+                          strokeWeight: 1
+                        });
+                    });
+                });
             });
             
         }
