@@ -58,6 +58,36 @@
             var map = new google.maps.Map($("#map_canvas")[0], myOptions);
             map.setOptions({styles: stylesArray});
             var infowindow = new google.maps.InfoWindow();
+            // ec2 regions
+            // compare with http://aws.amazon.com/about-aws/globalinfrastructure/
+            $.getJSON('ec2regions.json', function(regions) {
+                $(regions).each(function() {
+                    var region = this;
+                    lat = region.position[0];
+                    lng = region.position[1];
+
+                    var triangleCoords = [
+                       new google.maps.LatLng(lat, lng-1.5),
+                       new google.maps.LatLng(lat-1, lng+1),
+                       new google.maps.LatLng(lat+1, lng+1),
+                       new google.maps.LatLng(lat, lng-1.5)
+                     ];
+                    var polygon = new google.maps.Polygon({
+                        paths: triangleCoords,
+                        strokeColor: "#E9BC14",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 1,
+                        fillColor: "#E9BC14",
+                        fillOpacity: .5,
+                        map: map
+                    });                    
+                    // var marker = new google.maps.Marker({
+                    //     position: new google.maps.LatLng(lat, lng),
+                    //     map: map,
+                    //     title: region.name
+                    // });
+                });                                   
+            });
             $.get("geocode.json" , function(geocode) {
                 // build gecode lookup table
                 var geocode = jQuery.parseJSON(geocode);
@@ -98,8 +128,8 @@
                 });
                 // add links
                 var start_time = new Date().getTime() / 1000; // TODO remove
-                var animate_links = true; // TODO remove
-                var animate_labels = true; // TODO remove
+                var animate_links = false; // TODO remove
+                var animate_labels = false; // TODO remove
                 var linkColorActive = "#912815";
                 var linkColorInactive = "#333333";                        
                 $.getJSON('links.json', function(links) {
@@ -112,7 +142,7 @@
                             new google.maps.LatLng(end.position[0]+.1, end.position[1]),                        
                         ];
                         var linkCenterCoordinates = new google.maps.LatLng(
-                                (start.position[0] + end.position[0])/2,
+                                ((start.position[0] + end.position[0])/2)+1,
                                 (start.position[1] + end.position[1])/2
                         );
                         // var linkColor = "#4592B7";
@@ -124,8 +154,8 @@
                           path: linkCoordinates,
                           strokeColor: linkColorInactive,
                           map: map,
-                          strokeOpacity: 0.6,
-                          strokeWeight: 4
+                          strokeOpacity: 0.7,
+                          strokeWeight: 1
                         });
                         // traffic label
                         var label = new MapLabel({
@@ -168,32 +198,32 @@
                     });
                 });
                 // add hosts
-                $.getJSON('hosts.json', function(hosts) {
-                    $(hosts).each(function() {
-                        var host = this;
-                        var router = geocode[host.router]
-                        lat = host.offset[0] + router.position[0]
-                        lng = host.offset[1] + router.position[1]
-                        var marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(lat, lng),
-                            map: map,
-                            icon: "static/triangle.png"
-                        });
-                        var start = router.position
-                        var end = [lat, lng]
-                        var linkCoordinates = [
-                            new google.maps.LatLng(start[0]+.1, start[1]),
-                            new google.maps.LatLng(end[0]+.1, end[1]),                        
-                        ];
-                        var linkPath = new google.maps.Polyline({
-                          path: linkCoordinates,
-                          strokeColor: "#4592B7",
-                          map: map,
-                          strokeOpacity: 0.6,
-                          strokeWeight: 1
-                        });
-                    });
-                });
+                // $.getJSON('hosts.json', function(hosts) {
+                //     $(hosts).each(function() {
+                //         var host = this;
+                //         var router = geocode[host.router]
+                //         lat = host.offset[0] + router.position[0]
+                //         lng = host.offset[1] + router.position[1]
+                //         var marker = new google.maps.Marker({
+                //             position: new google.maps.LatLng(lat, lng),
+                //             map: map,
+                //             icon: "static/triangle.png"
+                //         });
+                //         var start = router.position
+                //         var end = [lat, lng]
+                //         var linkCoordinates = [
+                //             new google.maps.LatLng(start[0]+.1, start[1]),
+                //             new google.maps.LatLng(end[0]+.1, end[1]),                        
+                //         ];
+                //         var linkPath = new google.maps.Polyline({
+                //           path: linkCoordinates,
+                //           strokeColor: "#4592B7",
+                //           map: map,
+                //           strokeOpacity: 0.6,
+                //           strokeWeight: 1
+                //         });
+                //     });
+                // });
             });
             
         }

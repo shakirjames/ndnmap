@@ -1,0 +1,17 @@
+[
+   {
+        "name" : "us-east-1",
+        "description" : "N. Virginia",
+        "position": [ 39.03892, -77.490005 ]
+    },
+    {
+        "name" : "us-west-1",
+        "description" : "N. California",
+        "position": [ 37.444881, -122.151489 ]
+    },
+    {
+        "name" : "us-west-2",
+        "description" : "Oregon",
+        "position": [ 43.804133, -120.554201 ]
+    }
+]
