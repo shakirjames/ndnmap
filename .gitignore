@@ -1,34 +1,9 @@
-# Python
+*~
 *.py[co]
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-develop-eggs
-.installed.cfg
-pip-log.txt
-
-# Unit test / coverage reports
 .coverage
-.tox
-
-# Django
-*.log
-*.pot
 settings_local.py
-site_media/
-
-# Logs and databases
-*.log
-*.sql
-*.sqlite
-sqlite3.db
-
-# OS generated files
-.DS_Store*
-ehthumbs.db
+local.sqlite
+static
+site_static
+.DS_Store
 Icon?
-Thumbs.db
