@@ -8,4 +8,5 @@ urlpatterns = patterns('gmap.views',
         'bw',
         name='bw'),
     url(r'^xhr_bw/(?P<link>\d+)/$', 'xhr_bw', name='xhr_bw'),
+    url(r'^json/(?P<file>\w+)/$', 'json'),
 )

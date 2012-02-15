@@ -1,0 +1,87 @@
+[
+    {
+        "id": 1,
+        "start": "SPP-SALT",
+        "end": "UCLA"
+    },
+    {
+        "id": 2,
+        "start": "SPP-SALT",
+        "end": "SPP-KANS"
+    },
+    {
+        "id": 3,
+        "start": "SPP-SALT",
+        "end": "SPP-HOUS"
+    },
+    {
+        "id": 4,
+        "start": "SPP-HOUS",
+        "end": "SPP-KANS"
+    },
+    {
+        "id": 5,
+        "start": "SPP-HOUS",
+        "end": "SPP-ATLA"
+    },
+    {
+        "id": 6,
+        "start": "SPP-KANS",
+        "end": "SPP-ATLA"
+    },
+    {
+        "id": 7,
+        "start": "SPP-KANS",
+        "end": "SPP-WASH"
+    },
+    {
+        "id": 8,
+        "start": "SPP-WASH",
+        "end": "SPP-ATLA"
+    },
+    {
+        "id": 9,
+        "start": "PARC",
+        "end": "UCLA"
+    },
+    {
+        "id": 10,
+        "start": "UCLA",
+        "end": "UCI"
+    },
+    {
+        "id": 11,
+        "start": "UCI",
+        "end": "UCSD"
+    },
+    {
+        "id": 12,
+        "start": "UA",
+        "end": "SPP-HOUS"
+    },
+    {
+        "id": 13,
+        "start": "UM",
+        "end": "SPP-ATLA"
+    },
+    {
+        "id": 14,
+        "start": "CSU",
+        "end": "SPP-SALT"
+    },
+    {
+        "id": 15,
+        "start": "WashU",
+        "end": "SPP-KANS"
+    },
+    {
+        "id": 16,
+        "start": "UIUC",
+        "end": "SPP-KANS"
+    },
+    {
+        "id": 17,
+        "start": "NEU",
+        "end": "SPP-WASH"
+    }
+]

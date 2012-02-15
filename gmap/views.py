@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core import serializers
 from django.core.urlresolvers import reverse 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from gmap.models import Bandwidth
 from django.template import RequestContext
 from django.views.generic import TemplateView
@@ -31,9 +31,15 @@ def bw(request, link , time, rx, tx):
 def xhr_bw(request, link):
     """Return JSON data for XMLHttpRequests."""
     import json    
-    mimetype = 'application/javascript'
     rx, tx = Bandwidth.objects.rates(link)
     data = json.dumps({'rx': rx, 'tx': tx})
-    return HttpResponse(data, mimetype)
+    return HttpResponse(data, 'application/json')
 
 
+def json(request, file):
+    f = '{0}/gmap/json/{1}.json'.format(settings.SITE_ROOT, file)    
+    try:
+        data = open(f, 'r').read()
+    except IOError:
+        raise Http404
+    return HttpResponse(data, 'application/json')
