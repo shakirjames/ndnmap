@@ -29,10 +29,22 @@ Clone `ndnmap`.
     git clone https://shakfu@github.com/shakfu/ndnmap.git
     cd ndnmap
 
+Install the packages in ``deploy/requirements.txt``.
+
+  * ``pip`` (and optionally [virtualenv](http://mathematism.com/2009/07/30/presentation-pip-and-virtualenv/)) simplifies the process
+
+        sudo easy_install -U pip # requires setuptools
+        pip install -r deploy/requirements.txt
 
 
 Deployment
 ----------
+
+Use [fabric](http://fabfile.org/) to install a LAMP stack on EC2. 
+
+See the list of available commands.
+
+    fab --list 
 
 Start an EC2 instance
 
@@ -41,7 +53,6 @@ Start an EC2 instance
 Install the `ndnmap` Django application on instance.
     
     fab deploy
-
 
 Shut down the EC2 instances
 
