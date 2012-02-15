@@ -25,7 +25,7 @@ class BandwidthManager(models.Manager):
             rx = (b1.rx - b0.rx ) / t_delta
             tx = (b1.tx - b0.tx ) / t_delta
             # Test for negative rates:
-            #     Since we ignore 0 byte reports, this can happen if a 
+            #     Since we ignore 0 bit counts, this can happen if a 
             #     recent report's (rx,tx) is less than the penultimate one.
             if rx < 0: rx = 0
             if tx < 0: tx = 0
