@@ -1,4 +1,7 @@
 # Django settings for ndnmap project.
+from os import path, environ
+
+SITE_ROOT = path.realpath(path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -56,7 +59,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = path.join(SITE_ROOT, 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -106,6 +109,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    path.join(SITE_ROOT, 'templates'),
+
 )
 
 INSTALLED_APPS = (
@@ -115,10 +120,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admin',
+    'gmap',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -143,3 +146,28 @@ LOGGING = {
         },
     }
 }
+
+
+# show django-debug-toolbar for super users
+def custom_show_toolbar(request): 
+    if request.user.is_superuser: 
+        return True 
+    return False 
+
+DEBUG_TOOLBAR_CONFIG = { 
+    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar, 
+    'INTERCEPT_REDIRECTS': False,
+} 
+
+
+AWS_STORAGE_BUCKET_NAME = 'ndnmap-media'
+AWS_SECRET_ACCESS_KEY = environ['AWS_SECRET_ACCESS_KEY']
+AWS_ACCESS_KEY_ID = environ['AWS_ACCESS_KEY_ID']
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+
+try:
+    from settings_local import *
+except ImportError:
+    pass

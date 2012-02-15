@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+            <style type="text/css">
+            html { height: 100% }
+            body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
+            #map_canvas { height: 100% }
+        </style>
+        <script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
+        </script>    
+        <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
+        </script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timers.min.js"></script>        
+        <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel.min.js"></script>
+        <script type="text/javascript">
+            function initialize() {
+                var stylesArray = [
+                    {
+                        featureType: "road",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    },{
+                        featureType: "transit",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    },{
+                        featureType: "poi",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    },{
+                        featureType: "administrative",
+                        stylers: [
+                            { visibility: "simplified" }
+                        ]
+                    },{
+                        featureType: "administrative",
+                        elementType: "labels",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    }
+                ]
+            var us = new google.maps.LatLng(38.6,-96.6);
+            var myOptions = {
+                zoom: 5,
+                center: us,
+                mapTypeControl: false,
+                scaleControl: false,
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map($("#map_canvas")[0], myOptions);
+            map.setOptions({styles: stylesArray});
+            var infowindow = new google.maps.InfoWindow();
+            
+            // title
+            // use a marker because labels are not clickable
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(45, -96.6),
+                map: map,
+                title: '',
+                icon: '{{ STATIC_URL }}img/ndn_testbed.png'
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
+            });
+
+                        
+            // ec2 regions
+            $.get('{{ STATIC_URL }}json/ec2regions.json', function(regions) {
+                $(regions).each(function() {
+                    var region = this;
+                    lat = region.position[0];
+                    lng = region.position[1];
+                    var triangleCoords = [
+                       new google.maps.LatLng(lat+.5, lng-1),
+                       new google.maps.LatLng(lat+.5, lng+1),
+                       new google.maps.LatLng(lat-.8, lng), // bottom point
+                       new google.maps.LatLng(lat+.5, lng-1)
+                     ];
+                    var polygon = new google.maps.Polygon({
+                        paths: triangleCoords,
+                        strokeColor: "#E9BC14",
+                        strokeOpacity: 1,
+                        strokeWeight: 1,
+                        fillColor: "#E9BC14",
+                        fillOpacity: 0.5,
+                        map: map
+                    });
+                });                                   
+            });
+            $.get("{{ STATIC_URL }}json/geocode.json" , function(geocode) {
+                // add routers
+                $.get('{{ STATIC_URL }}json/routers.json', function(routers) {
+                    $(routers).each(function() {
+                        var router = geocode[this];
+                        if (router.backbone == true) {
+                            icon = '{{ STATIC_URL }}img/circle.png';
+                        } 
+                        else {
+                            icon = '{{ STATIC_URL }}img/rectangle.png';                    
+                        }
+                        lat = router.position[0];
+                        lng = router.position[1];
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, lng),
+                            map: map,
+                            title: router.description,
+                            icon: icon
+                        });
+                        var mapLabel = new MapLabel({
+                            text: router.shortname,
+                            position: new google.maps.LatLng(lat-.1, lng),
+                            map: map,
+                            fontSize: 13,
+                            align: 'center',
+                            minZoom: 4,
+                        });
+                        var contentString = '<div class="info-content">'+
+                                             '<h1>' + router.name + '</h1>' +
+                                             '<p><a target="_blank" ' + 
+                                             'href="'+ router.site +'">' +
+                                             router.site + '</a></p>' +
+                                             '</div>';
+                        //var infowindow = new google.maps.InfoWindow(); // multiple infowindows
+                        google.maps.event.addListener(marker, 'click', function() {
+                            infowindow.setContent(contentString)
+                            infowindow.open(map, marker);
+                        });
+                    });
+                });
+                // add links
+                var start_time = new Date().getTime() / 1000; // TODO remove
+                var animate_links = false; // TODO remove
+                var animate_labels = false; // TODO remove                
+                var linkColorActive = "#912815";
+                var linkColorInactive = "#000000";                        
+                $.get('{{ STATIC_URL }}json/links.json', function(links) {
+                    $(links).each(function() {
+                        var link = this;
+                        var start = geocode[link.start]
+                        var end = geocode[link.end]
+                        var linkCoordinates = [
+                            new google.maps.LatLng(start.position[0]+.1, start.position[1]),
+                            new google.maps.LatLng(end.position[0]+.1, end.position[1]),                        
+                        ];
+                        var linkCenterCoordinates = new google.maps.LatLng(
+                                ((start.position[0] + end.position[0])/2)+1,
+                                (start.position[1] + end.position[1])/2
+                        );
+                        // var linkColor = "#4592B7";
+                        // if (start.backbone == true  && end.backbone == true) {
+                        //     linkColor = "#5DA31D";
+                        // }
+                        // link
+                        var linkPath = new google.maps.Polyline({
+                          path: linkCoordinates,
+                          strokeColor: linkColorInactive,
+                          map: map,
+                          strokeOpacity: 0.7,
+                          strokeWeight: 1
+                        });
+                        // traffic label
+                        var label = new MapLabel({
+                            text: '',
+                            position: linkCenterCoordinates,
+                            map: map,
+                            fontSize: 18,
+                            align: 'center',
+                        });
+                        // timers
+                        if (animate_links==true) { 
+                            $(document).everyTime(500, function (i) {
+                                var randn=Math.floor(Math.random()*10)+1 // 1--10
+                                linkPath.set('strokeWeight', randn);
+                                if (randn > 5) {
+                                    linkPath.set('strokeColor', linkColorActive);
+                                }
+                                else {
+                                    linkPath.set('strokeColor', linkColorInactive);
+                                }
+                            }, 0);
+                        }
+                        if (animate_labels==true) {
+                            $(document).everyTime(500, function (i) {
+                                    var elapsed = (new Date().getTime() / 1000) - start_time;
+                                    label.set('text', (Math.round(elapsed*10)/10).toString());
+                            }, 0);
+                        }
+                        // infowindow
+                        var contentString = '<div class="info-content">'+
+                                             '<h1>' + start.shortname + ' - ' +
+                                             end.shortname + '</h1>' +
+                                             '<p> stats </p>' +
+                                             '</div>';
+                        google.maps.event.addListener(linkPath, 'click', function(event) {
+                            infowindow.setPosition(event.latLng);
+                            infowindow.setContent(contentString)
+                            infowindow.open(map);
+                        });
+                    });
+                });
+                // add hosts
+                $.get('{{ STATIC_URL }}json/hosts.json', function(hosts) {
+                    $(hosts).each(function() {
+                        var host = this;
+                        var router = geocode[host.router]
+                        lat = host.offset[0] + router.position[0]
+                        lng = host.offset[1] + router.position[1]
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, lng),
+                            map: map,
+                            icon: "{{ STATIC_URL }}img/triangle.png"
+                        });
+                        var start = router.position
+                        var end = [lat, lng]
+                        var linkCoordinates = [
+                            new google.maps.LatLng(start[0]+.1, start[1]),
+                            new google.maps.LatLng(end[0]+.1, end[1]),                        
+                        ];
+                        var linkPath = new google.maps.Polyline({
+                          path: linkCoordinates,
+                          strokeColor: "#4592B7",
+                          map: map,
+                          strokeOpacity: 0.6,
+                          strokeWeight: 1
+                        });
+                    });
+                });
+            });
+            
+        }
+        </script>
+    </head>
+    <body onload="initialize()">
+        <div id="map_canvas" style="width:100%; height:100%"></div>
+    </body>
+</html>
