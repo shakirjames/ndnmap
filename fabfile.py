@@ -118,6 +118,15 @@ def flush():
     run('{}/bin/python manage.py flush gmap --noinput'.format(virtual_env))
 
 
+def push(tag=None, static=False):
+    """Update application"""
+    # push code to repo
+    local('git push origin')
+    with cd(APP_DIR):
+        sudo('git pull', user=APP_USER)
+        sudo('touch deploy/app.wsgi', user=APP_USER)
+
+
 def deploy():
     """Deploy a LAMP stack"""
     test()
