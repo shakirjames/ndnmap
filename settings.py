@@ -1,5 +1,5 @@
 # Django settings for ndnmap project.
-from os import path, environ
+from os import path
 
 SITE_ROOT = path.realpath(path.dirname(__file__))
 
@@ -161,11 +161,15 @@ DEBUG_TOOLBAR_CONFIG = {
 
 
 AWS_STORAGE_BUCKET_NAME = 'ndnmap-media'
-AWS_SECRET_ACCESS_KEY = environ['AWS_SECRET_ACCESS_KEY']
-AWS_ACCESS_KEY_ID = environ['AWS_ACCESS_KEY_ID']
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# set AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID in settings_local
 
+
+# Assume zero bandwidth if time since last update > GMAP_LINK_ALIVE_INTERVAL
+GMAP_LINK_ALIVE_INTERVAL = 30  # seconds
+# Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL
+GMAP_BW_UPDATE_INTERVAL = 500 # miliseconds
 
 try:
     from settings_local import *

@@ -70,8 +70,6 @@
             google.maps.event.addListener(marker, 'click', function() {
                 window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
             });
-
-                        
             // ec2 regions
             $.get('{{ STATIC_URL }}json/ec2regions.json', function(regions) {
                 $(regions).each(function() {
@@ -128,7 +126,6 @@
                                              'href="'+ router.site +'">' +
                                              router.site + '</a></p>' +
                                              '</div>';
-                        //var infowindow = new google.maps.InfoWindow(); // multiple infowindows
                         google.maps.event.addListener(marker, 'click', function() {
                             infowindow.setContent(contentString)
                             infowindow.open(map, marker);
@@ -176,7 +173,7 @@
                         });
                         // timers
                         if (animate_links==true) { 
-                            $(document).everyTime(500, function (i) {
+                            $(document).everyTime({{ bw_update_interval }}, function (i) {
                                 var randn=Math.floor(Math.random()*10)+1 // 1--10
                                 linkPath.set('strokeWeight', randn);
                                 if (randn > 5) {
@@ -188,7 +185,7 @@
                             }, 0);
                         }
                         if (animate_labels==true) {
-                            $(document).everyTime(500, function (i) {
+                            $(document).everyTime({{ bw_update_interval }}, function (i) {
                                     var elapsed = (new Date().getTime() / 1000) - start_time;
                                     label.set('text', (Math.round(elapsed*10)/10).toString());
                             }, 0);

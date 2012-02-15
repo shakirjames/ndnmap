@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import patterns, url
-from django.views.generic.base import TemplateView
+from gmap.views import MapView
 
-urlpatterns = patterns('',
-    url(r'^$', TemplateView.as_view(template_name='gmap/map.html')),    
+urlpatterns = patterns('gmap.views',
+    url(r'^$', MapView.as_view()),
+    url(r'^bw_test/$', TemplateView.as_view(template_name='gmap/bw_test.html')),
+    url(r'^xhr_bw/(?P<link>\d+)/$', 'xhr_bw', name='xhr_bw'),    
 )

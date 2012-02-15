@@ -4,6 +4,5 @@
 settings_local.py
 local.sqlite
 static
-site_static
 .DS_Store
 Icon?
