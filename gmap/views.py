@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core import serializers
 from django.core.urlresolvers import reverse 
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from gmap.models import Bandwidth
 from django.template import RequestContext
 from django.views.generic import TemplateView
