@@ -121,7 +121,7 @@ update_system() {
 }
 
 install_baseline() {
-    apt-get install -y build-essential git-core curl s3cmd
+    apt-get install -y build-essential git-core curl
 }
 
 install_python() {
