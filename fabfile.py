@@ -12,9 +12,9 @@ APP_NAME = 'ndnmap'
 # Name of application user to create (with restricted privilages)
 APP_USER = APP_NAME
 # Project path on server
-APP_DIR = '/home/{}/{}'.format(APP_USER, APP_NAME)
+APP_DIR = '/home/{0}/{1}'.format(APP_USER, APP_NAME)
 # URL of git, remote repos (read-only)
-APP_GIT_REPO = 'git://github.com/shakfu/{}.git'.format(APP_NAME)
+APP_GIT_REPO = 'git://github.com/shakfu/{0}.git'.format(APP_NAME)
 # Name of system user with sudo privilages
 ADMIN_USER = ec2.USER
 # EBS volume device (for database)
@@ -32,14 +32,14 @@ SITE_NAME = 'example.com'
 # Static URL prefix for Django
 STATIC_URL = 'http://s3.amazonaws.com/ndnmap-media'
 # Initial data
-INITIAL_DATA = '{}/deploy/initial_data.json'.format(APP_DIR)
+INITIAL_DATA = '{0}/deploy/initial_data.json'.format(APP_DIR)
 # Instance Tag
 TAG = APP_NAME
 
 
 # fabric environment settings
 env.tag_ins = TAG
-env.tag_vol = '{} database'.format(TAG) # database volume tag
+env.tag_vol = '{0} database'.format(TAG) # database volume tag
 env.hosts = [ins.public_dns_name for ins in ec2.get_instances(TAG)] # hosts list
 env.user = ADMIN_USER
 
@@ -78,10 +78,10 @@ def install_database():
     put('deploy/init_app_db.sh', '/usr/sbin/init_app_db',
         mode=0755, use_sudo=True)
     # run scripts
-    sudo('install_mysql {} {}'.format(VOL_DEVICE, VOL_MOUNT))
+    sudo('install_mysql {0} {1}'.format(VOL_DEVICE, VOL_MOUNT))
     sudo('init_app_db -d {n} -u {n} -p {p}'.format(n=APP_NAME, p=DB_PASS))
     # set the root password (used in backup)
-    run('mysqladmin -u root password {}'.format(DB_PASS))
+    run('mysqladmin -u root password {0}'.format(DB_PASS))
 
 
 def install_django():
@@ -97,7 +97,7 @@ def install_django():
             u=APP_USER,
             p=APP_DIR,
             f=INITIAL_DATA)
-    sudo('install_django {}'.format(args))
+    sudo('install_django {0}'.format(args))
 
 
 def deploy_static():
@@ -114,8 +114,8 @@ def test():
 
 def flush():
     """Flush the app database"""
-    virtual_env = '/home/{}/env'.format(APP_USER)
-    run('{}/bin/python manage.py flush gmap --noinput'.format(virtual_env))
+    virtual_env = '/home/{0}/env'.format(APP_USER)
+    run('{0}/bin/python manage.py flush gmap --noinput'.format(virtual_env))
 
 
 def push(tag=None, static=False):
