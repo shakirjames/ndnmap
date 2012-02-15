@@ -45,12 +45,6 @@ class BandwidthXHRTest(TestCase):
     def setUp(self):
         Bandwidth.objects.all().delete()
         self.b = Bandwidth.objects.create(link=1, time=1, rx=1, tx=1)
-
-    def test_non_xhr(self):
-        """Test 404 if non-AJAX request."""
-        from django.core.urlresolvers import reverse 
-        r = self.client.get(reverse('xhr_bw', args=(self.b.pk, )))
-        self.assertEqual(r.status_code, 404)
     
     def test_xhr_request(self):
         """Test valid JSON data from AJAX request."""

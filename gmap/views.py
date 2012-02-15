@@ -28,8 +28,6 @@ def bw(request, link , time, rx, tx):
 
 def xhr_bw(request, link):
     """Return JSON data for XMLHttpRequests."""
-    # if not request.is_ajax():
-    #     raise Http404
     import json    
     mimetype = 'application/javascript'
     rx, tx = Bandwidth.objects.rates(link)
