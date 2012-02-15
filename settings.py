@@ -160,16 +160,17 @@ DEBUG_TOOLBAR_CONFIG = {
 } 
 
 
+# django-storages
 AWS_STORAGE_BUCKET_NAME = 'ndnmap-media'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 # set AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID in settings_local
 
-
+# gmap
 # Assume zero bandwidth if time since last update > GMAP_LINK_ALIVE_INTERVAL
-GMAP_LINK_ALIVE_INTERVAL = 30  # seconds
+GMAP_LINK_ALIVE_INTERVAL = 10
 # Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL
-GMAP_BW_UPDATE_INTERVAL = 500 # miliseconds
+GMAP_BW_UPDATE_INTERVAL = 0.5
 
 try:
     from settings_local import *

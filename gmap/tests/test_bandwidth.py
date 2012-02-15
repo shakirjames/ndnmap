@@ -14,14 +14,14 @@ class BandwidthSaveTest(TestCase):
         b = Bandwidth.objects.filter(link=self.link)[0]
         self.assertEqual((b.rx, b.tx), (rx, tx))
     
-    def test_no_rates(self):
-        """Test zero rates ignored."""
+    def test_no_bits(self):
+        """Test that zero bit counts are ignored."""
         Bandwidth.objects.create(link=self.link, time=self.time, rx=0, tx=0)
         count = Bandwidth.objects.filter(link=self.link).count()
         self.assertEquals(0, count) 
     
-    def test_rates_honored(self):
-        """Test rates honored as specified."""
+    def test_bits_honored(self):
+        """Test bit counts honored as specified."""
         Bandwidth.objects.create(link=self.link, time=self.time, rx=1, tx=1)
         self._test_rx_tx(1, 1)
     

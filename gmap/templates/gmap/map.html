@@ -58,7 +58,13 @@
             var map = new google.maps.Map($("#map_canvas")[0], myOptions);
             map.setOptions({styles: stylesArray});
             var infowindow = new google.maps.InfoWindow();
-            
+            var linkColorActive = "#912815";
+            var linkColorInactive = "#000000";
+            var bwDivisor = 1000.00 // Kbps
+            function convertBandwidth(bits){
+                // always show one decimal place
+                return parseFloat(Math.round((bits / bwDivisor) * 10) / 10).toFixed(1);
+            }
             // title
             // use a marker because labels are not clickable
             var marker = new google.maps.Marker({
@@ -132,12 +138,7 @@
                         });
                     });
                 });
-                // add links
-                var start_time = new Date().getTime() / 1000; // TODO remove
-                var animate_links = false; // TODO remove
-                var animate_labels = false; // TODO remove                
-                var linkColorActive = "#912815";
-                var linkColorInactive = "#000000";                        
+                // add links                   
                 $.get('{{ STATIC_URL }}json/links.json', function(links) {
                     $(links).each(function() {
                         var link = this;
@@ -172,24 +173,26 @@
                             align: 'center',
                         });
                         // timers
-                        if (animate_links==true) { 
-                            $(document).everyTime({{ bw_update_interval }}, function (i) {
-                                var randn=Math.floor(Math.random()*10)+1 // 1--10
-                                linkPath.set('strokeWeight', randn);
-                                if (randn > 5) {
-                                    linkPath.set('strokeColor', linkColorActive);
-                                }
-                                else {
-                                    linkPath.set('strokeColor', linkColorInactive);
-                                }
-                            }, 0);
-                        }
-                        if (animate_labels==true) {
-                            $(document).everyTime({{ bw_update_interval }}, function (i) {
-                                    var elapsed = (new Date().getTime() / 1000) - start_time;
-                                    label.set('text', (Math.round(elapsed*10)/10).toString());
-                            }, 0);
-                        }
+                        // $(document).everyTime({{ bw_update_interval }}, function (i) {
+                        //     $.get("{{ bw_url }}"+link.id, function(data) {
+                        //         // TOOD
+                        //         linkPath.set('strokeWeight', 1);
+                        //         if (randn > 5) {
+                        //             linkPath.set('strokeColor', linkColorActive);
+                        //         }
+                        //         else {
+                        //             linkPath.set('strokeColor', linkColorInactive);
+                        //         }
+                        //     });
+                        // }, 0);
+
+                        $(document).everyTime({{ bw_update_interval }}, function (i) {
+                            $.get("{{ bw_url }}"+link.id, function(data) {
+                                rx = convertBandwidth(data.rx).toString();
+                                tx = convertBandwidth(data.tx).toString();
+                                label.set('text', rx + '/' + tx);
+                            }, "json");
+                        }, 0);
                         // infowindow
                         var contentString = '<div class="info-content">'+
                                              '<h1>' + start.shortname + ' - ' +
