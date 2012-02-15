@@ -80,7 +80,7 @@ _ec2connect.connections = {} # cache ('static' variable)
 def _get_filters(tag=None):
     filters = None
     if tag:
-        filters = {'tag:{}'.format(TAG_NAME): tag}
+        filters = {'tag:{0}'.format(TAG_NAME): tag}
     return filters
 
 
@@ -152,7 +152,7 @@ def run(tag, count=1, type='t1.micro'):
     """
     conn = _ec2connect()
     # start instances
-    print('Launching {} {} ...'.format(count, type))  
+    print('Launching {0} {1} ...'.format(count, type))  
     r = conn.run_instances(REGION_US_E1_AMI, 
                     min_count=count,
                     max_count=count,
@@ -206,7 +206,7 @@ def list_vol(tag=None, device=None):
         z = v.size
         i = v.attach_data.instance_id
         d = v.attach_data.device
-        print('\t{:25} {:2}GB {:15} {:15} {} {}'.format(t, z, v.id, s, i, d ))
+        print('\t{0:25} {1:2}GB {2:15} {3:15} {4} {5}'.format(t, z, v.id, s, i, d ))
 
 def addvol(tag, region, size, snapshot=None):
     """Create an EBS volume to instance
@@ -218,7 +218,7 @@ def addvol(tag, region, size, snapshot=None):
         size: size of volume in GB
         snapshot: use snapshot to create volume
     """
-    print 'Creating {}GB volume in {} ...'.format(size, region)
+    print 'Creating {0}GB volume in {1} ...'.format(size, region)
     conn = _ec2connect()
     vol = conn.create_volume(size, region, snapshot)
     vol.add_tag(TAG_NAME, tag)
@@ -235,7 +235,7 @@ def attvol(instance_id, volume_id, device=VOL_DEVICE):
         The EBS volume must be in the same location as the instance.
         Not us-east-1, but us-east-1[b|c].
     """
-    print 'Attaching {} to {} ...'.format(volume_id, instance_id)
+    print 'Attaching {0} to {1} ...'.format(volume_id, instance_id)
     conn = _ec2connect()
     conn.attach_volume(volume_id, instance_id, VOL_DEVICE)
 
@@ -266,7 +266,7 @@ def status(tag=None):
     for ins in instances:
         states[ins.state] = states.setdefault(ins.state, 0) + 1
     for state, count in states.iteritems(): 
-        print('\t{} {}'.format(state, count))
+        print('\t{0} {1}'.format(state, count))
 
 
 def list(tag=None):
@@ -295,14 +295,14 @@ def terminate(tag=None):
             vols.append(v)
         ip = ins.ip_address
         if ip in ips:
-            logging.warning('Elastic IP {} mapped to {}.'.format(ip, ins.id))            
+            logging.warning('Elastic IP {0} mapped to {1}.'.format(ip, ins.id))            
     conn.terminate_instances(ids)
     # delete the volumes after trying to terminate instances for two reasons:
     #  1. detaching the volume (before deleting) takes a while and may fail
     #  2. if disableApiTermination=true, instance termination will fail
     _wait_for_instances(instances, state=u'terminated')
     for vol in vols:
-        print('Deleting {} ({}) ...'.format(vol.id, vol.attach_data.device))
+        print('Deleting {0} ({1}) ...'.format(vol.id, vol.attach_data.device))
         _wait_for_unattachedvol(vol)
         vol.delete()
 
