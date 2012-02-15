@@ -26,7 +26,6 @@ class BandwidthXHRTest(TestCase):
         self.assertTrue(j.has_key('tx'))
     
 
-
 class BandwidthManagerTest(TestCase):
     """Test for BandwidthManager rates"""
     def setUp(self):
