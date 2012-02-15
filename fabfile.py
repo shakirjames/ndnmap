@@ -120,7 +120,7 @@ def flush():
 
 def deploy():
     """Deploy a LAMP stack"""
-    # test()
-    # deploy_static()
-    # install_database()
+    test()
+    deploy_static()
+    install_database()
     install_django()
