@@ -77,7 +77,7 @@
                 window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
             });
             // ec2 regions
-            $.get('{{ STATIC_URL }}json/ec2regions.json', function(regions) {
+            $.getJSON('{{ STATIC_URL }}json/ec2regions.json', function(regions) {
                 $(regions).each(function() {
                     var region = this;
                     lat = region.position[0];
@@ -99,9 +99,9 @@
                     });
                 });                                   
             });
-            $.get("{{ STATIC_URL }}json/geocode.json" , function(geocode) {
+            $.getJSON("{{ STATIC_URL }}json/geocode.json" , function(geocode) {
                 // add routers
-                $.get('{{ STATIC_URL }}json/routers.json', function(routers) {
+                $.getJSON('{{ STATIC_URL }}json/routers.json', function(routers) {
                     $(routers).each(function() {
                         var router = geocode[this];
                         if (router.backbone == true) {
@@ -139,7 +139,7 @@
                     });
                 });
                 // add links                   
-                $.get('{{ STATIC_URL }}json/links.json', function(links) {
+                $.getJSON('{{ STATIC_URL }}json/links.json', function(links) {
                     $(links).each(function() {
                         var link = this;
                         var start = geocode[link.start]
@@ -174,7 +174,7 @@
                         });
                         // timers
                         // $(document).everyTime({{ bw_update_interval }}, function (i) {
-                        //     $.get("{{ bw_url }}"+link.id, function(data) {
+                        //     $.getJSON("{{ bw_url }}"+link.id, function(data) {
                         //         // TOOD
                         //         linkPath.set('strokeWeight', 1);
                         //         if (randn > 5) {
@@ -187,7 +187,7 @@
                         // }, 0);
 
                         $(document).everyTime({{ bw_update_interval }}, function (i) {
-                            $.get("{{ bw_url }}"+link.id, function(data) {
+                            $.getJSON("{{ bw_url }}"+link.id, function(data) {
                                 rx = convertBandwidth(data.rx).toString();
                                 tx = convertBandwidth(data.tx).toString();
                                 label.set('text', rx + '/' + tx);
@@ -207,7 +207,7 @@
                     });
                 });
                 // add hosts
-                $.get('{{ STATIC_URL }}json/hosts.json', function(hosts) {
+                $.getJSON('{{ STATIC_URL }}json/hosts.json', function(hosts) {
                     $(hosts).each(function() {
                         var host = this;
                         var router = geocode[host.router]
