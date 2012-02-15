@@ -3,20 +3,57 @@ from django.conf import settings
 from django.test import TestCase
 from gmap.models import Bandwidth
 
+class BandwidthSaveTest(TestCase):
+    """Test Bandwidth save override method"""
+    link = 1
+    time = 1
+    
+    def _test_rx_tx(self, rx, tx):
+        b = Bandwidth.objects.filter(link=self.link)[0]
+        self.assertEqual((b.rx, b.tx), (rx, tx))
+    
+    def test_no_rates(self):
+        """Test zero rates ignored."""
+        Bandwidth.objects.create(link=self.link, time=self.time, rx=0, tx=0)
+        count = Bandwidth.objects.filter(link=self.link).count()
+        self.assertEquals(0, count) 
+    
+    def test_rates_honored(self):
+        """Test rates honored as specified."""
+        Bandwidth.objects.create(link=self.link, time=self.time, rx=1, tx=1)
+        self._test_rx_tx(1, 1)
+    
+    def test_rx_only(self):
+        """Test rx honored with zero tx."""
+        Bandwidth.objects.create(link=self.link, time=self.time, rx=1, tx=0)
+        self._test_rx_tx(1, 0)
+    
+    def test_tx_only(self):
+        """Test tx honored with zero rx."""
+        Bandwidth.objects.create(link=self.link, time=self.time, rx=0, tx=1)
+        self._test_rx_tx(0, 1)
+    
+
+
+class BandwithAddTest(TestCase):
+    """Test view to add Bandwidth"""
+    pass
+    
+
 class BandwidthXHRTest(TestCase):
-    """Tests for JSON data from XMLHttpRequests"""
+    """Test XMLHttpRequests"""
     def setUp(self):
         Bandwidth.objects.all().delete()
         self.b = Bandwidth.objects.create(link=1, time=1, rx=1, tx=1)
-    
+
     def test_non_xhr(self):
-        """Test return 404 if non-AJAX request."""
+        """Test 404 if non-AJAX request."""
         from django.core.urlresolvers import reverse 
         r = self.client.get(reverse('xhr_bw', args=(self.b.pk, )))
         self.assertEqual(r.status_code, 404)
     
     def test_xhr_request(self):
-        """Test JSON data from AJAX request."""
+        """Test valid JSON data from AJAX request."""
         from django.core.urlresolvers import reverse 
         import json
         r = self.client.get(reverse('xhr_bw', args=(self.b.pk, )), 
@@ -27,7 +64,7 @@ class BandwidthXHRTest(TestCase):
     
 
 class BandwidthManagerTest(TestCase):
-    """Test for BandwidthManager rates"""
+    """Test BandwidthManager rates"""
     def setUp(self):
         Bandwidth.objects.all().delete() # if any initial_data
         Bandwidth.objects.create(link=1, time=1, rx=1, tx=1)

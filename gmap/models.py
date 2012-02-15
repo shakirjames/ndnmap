@@ -43,5 +43,11 @@ class Bandwidth(models.Model):
       
     objects = BandwidthManager()
        
+    def save(self, *args, **kwargs):
+        if not self.rx and not self.tx:
+            return
+        else:
+            super(Bandwidth, self).save(*args, **kwargs)
+    
     def __unicode__(self):
         return 'link {0}'.format(self.link)

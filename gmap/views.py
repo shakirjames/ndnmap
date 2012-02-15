@@ -21,14 +21,15 @@ class MapView(TemplateView):
 
 def bw(request, link , time, rx, tx):
     """Add bandwidth reports"""
-    ## TODO add to bandwith table    
-    pass
+    # WARNING: This is not safe!
+    Bandwidth.objects.create(link=link, time=time, rx=rx, tx=tx)
+    return HttpResponse('Got it.')
 
 
 def xhr_bw(request, link):
     """Return JSON data for XMLHttpRequests."""
-    if not request.is_ajax():
-        raise Http404
+    # if not request.is_ajax():
+    #     raise Http404
     import json    
     mimetype = 'application/javascript'
     rx, tx = Bandwidth.objects.rates(link)
