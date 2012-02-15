@@ -13,8 +13,8 @@ APP_NAME = 'ndnmap'
 APP_USER = APP_NAME
 # Project path on server
 APP_DIR = '/home/{}/{}'.format(APP_USER, APP_NAME)
-# URL of git, remote repos
-APP_GIT_REPO = 'git@github.com:shakfu/{}.git'.format(APP_NAME)
+# URL of git, remote repos (read-only)
+APP_GIT_REPO = 'git://github.com/shakfu/{}.git'.format(APP_NAME)
 # Name of system user with sudo privilages
 ADMIN_USER = ec2.USER
 # EBS volume device (for database)
@@ -30,7 +30,7 @@ DB_PASS = 'nduffNft'
 # SiteName for Apache
 SITE_NAME = 'example.com'
 # Static URL prefix for Django
-STATIC_URL = 'http://s3.amazonaws.com'
+STATIC_URL = 'http://s3.amazonaws.com/ndnmap-media'
 # Initial data
 INITIAL_DATA = '{}/deploy/initial_data.json'.format(APP_DIR)
 # Instance Tag
@@ -88,11 +88,10 @@ def install_django():
     """Install Apache, Python, and Django app"""
     put('deploy/install_django.sh','/usr/sbin/install_django', 
         mode=0755, use_sudo=True)
-    static_url = '{}/{}'.format(STATIC_URL, env.s3_bucket_name)
     args = '-n {n} -w {w} -s {s} -P {P} -g {g} -u {u} -p {p} -f {f}'.format(
             n=APP_NAME,
             w=SITE_NAME,
-            s=static_url,
+            s=STATIC_URL,
             P=DB_PASS,
             g=APP_GIT_REPO,
             u=APP_USER,
@@ -121,7 +120,7 @@ def flush():
 
 def deploy():
     """Deploy a LAMP stack"""
-    test()
-    deploy_static()
-    install_database()
+    # test()
+    # deploy_static()
+    # install_database()
     install_django()

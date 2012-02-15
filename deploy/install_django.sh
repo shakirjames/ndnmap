@@ -57,7 +57,7 @@ check_arg() {
 }
 
 getargs() {
-    while getopts "hn:g:b:y:H:D:U:P:w:s:a:k:B:u:p:f:" opt; do
+    while getopts "hn:g:b:H:D:U:P:w:s:u:p:f:" opt; do
         case "$opt" in
             h) usage; exit 0 ;;
             n) NAME="$OPTARG" ;;
@@ -69,8 +69,6 @@ getargs() {
             P) DB_PASS="$OPTARG" ;;
             w) SITE_NAME="$OPTARG" ;;
             s) STATIC_URL="$OPTARG" ;;
-            a) AWS_ACCESS_KEY="$OPTARG" ;;
-            k) AWS_SECRET_KEY="$OPTARG" ;;
             u) LOCAL_USER="$OPTARG" ;;
             p) PROJECT_ROOT="$OPTARG" ;;
             f) FIXTURE="$OPTARG" ;;
@@ -80,8 +78,6 @@ getargs() {
     # check required args
     check_arg "NAME"
     check_arg "GITREPO"
-    check_arg "AWS_ACCESS_KEY"
-    check_arg "AWS_SECRET_KEY"
 }
 
 setdefaults() {
@@ -156,11 +152,6 @@ install_webserver() {
         Allow from all
     </Directory>
 
-    Alias $STATIC_URL $PROJECT_ROOT/media/
-    <Directory $PROJECT_ROOT/media>
-        Order deny,allow
-        Allow from all
-    </Directory>
 </VirtualHost>
 EOF
 
@@ -179,8 +170,10 @@ bootstrap_project() {
     sudo -u $LOCAL_USER mkdir $PROJECT_ROOT    
 }
 
-
 install_project() {
+    # clone from git hub
+    # assumes read-only repo
+    sudo -u $LOCAL_USER mkdir -p /home/$LOCAL_USER/.ssh    
     sudo -u $LOCAL_USER ssh-keyscan -H github.com | sudo -u $LOCAL_USER tee /home/$LOCAL_USER/.ssh/known_hosts
     sudo -u $LOCAL_USER git clone -b $BRANCH $GITREPO $PROJECT_ROOT
     sudo -u $LOCAL_USER /home/$LOCAL_USER/env/bin/pip -E /home/$LOCAL_USER/env install -r $PROJECT_ROOT/deploy/requirements.txt
@@ -235,12 +228,12 @@ EOF
 getargs "$@"
 setdefaults
 
-update_system
-install_baseline
-install_python
-install_webserver
- 
-bootstrap_project
+# update_system
+# install_baseline
+# install_python
+# install_webserver
+#  
+# bootstrap_project
 install_project
 configure_local_settings
 activate_webserver
