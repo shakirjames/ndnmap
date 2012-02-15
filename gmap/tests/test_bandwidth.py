@@ -7,7 +7,9 @@ class BandwidthSaveTest(TestCase):
     """Test Bandwidth save override method"""
     link = 1
     time = 1
-    
+    def setUp(self):
+        Bandwidth.objects.all().delete()
+        
     def _test_rx_tx(self, rx, tx):
         b = Bandwidth.objects.filter(link=self.link)[0]
         self.assertEqual((b.rx, b.tx), (rx, tx))
@@ -34,10 +36,17 @@ class BandwidthSaveTest(TestCase):
         self._test_rx_tx(0, 1)
     
 
-
-class BandwithAddTest(TestCase):
-    """Test view to add Bandwidth"""
-    pass
+class BandwidthAddTest(TestCase):
+    """Test view to add Bandwidth"""    
+    def setUp(self):
+        Bandwidth.objects.all().delete()
+    
+    def test_bw(self):
+        from django.core.urlresolvers import reverse 
+        d = (1, 1, 1, 1)
+        r = self.client.get(reverse('bw', args=(d)))
+        b = Bandwidth.objects.filter(link=1)[0]
+        self.assertEqual(d, (b.link, b.time, b.rx, b.tx))
     
 
 class BandwidthXHRTest(TestCase):
