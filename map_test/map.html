@@ -14,7 +14,10 @@
             src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
         </script>
         <script type="text/javascript" src="static/jquery.timers.min.js"></script>        
+        <!-- label that redraws after many updates -->
         <script type="text/javascript" src="static/maplabel.min.js"></script>
+        <!--  clickable label for map title -->        
+        <!-- <script type="text/javascript" src="static/label.js"></script> -->
         <script type="text/javascript">
             function initialize() {
                 var stylesArray = [
@@ -58,6 +61,45 @@
             var map = new google.maps.Map($("#map_canvas")[0], myOptions);
             map.setOptions({styles: stylesArray});
             var infowindow = new google.maps.InfoWindow();
+            
+            // title
+            // use a marker because labels are not clickable
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(45, -96.6),
+                map: map,
+                title: '',
+                icon: 'static/ndn_testbed.png'
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
+            });
+
+
+            
+            
+            
+            // var label = new Label({
+            //     text: 'NDN Testbed',
+            //     map: map,
+            //     position: new google.maps.LatLng(47, -96.6),
+            //     visible: true,
+            //     clickable: true,
+            //     zIndex: 10,
+            // });
+            // google.maps.event.addListener(label, 'click', function() {
+            //     alert('Label has been clicked');
+            // });
+
+           
+            // var mapTitle = new MapLabel({
+            //     text: 'NDN Testbed',
+            //     position: new google.maps.LatLng(47, -96.6),
+            //     map: map,
+            //     fontSize: 45,
+            //     align: 'center',
+            //     minZoom: 4,
+            // });
+                        
             // ec2 regions
             // compare with http://aws.amazon.com/about-aws/globalinfrastructure/
             $.getJSON('ec2regions.json', function(regions) {
@@ -66,29 +108,49 @@
                     lat = region.position[0];
                     lng = region.position[1];
                     
-                    var paths = [];
-                    for (var i = 0; i < region.paths.length; i++) {
-                       paths[i] = new google.maps.LatLng(region.paths[i].lat, region.paths[i].lng);
-                    }
+                    //marker                
+                    // var marker = new google.maps.Marker({
+                    //     position: new google.maps.LatLng(lat, lng),
+                    //     map: map,
+                    //     title: region.name
+                    // });
+                    
+                    // triangle 
                     // var triangleCoords = [
                     //    new google.maps.LatLng(lat, lng-1.5),
                     //    new google.maps.LatLng(lat-1, lng+1),
                     //    new google.maps.LatLng(lat+1, lng+1),
                     //    new google.maps.LatLng(lat, lng-1.5)
                     //  ];
+                    var triangleCoords = [
+                       new google.maps.LatLng(lat+.5, lng-1),
+                       new google.maps.LatLng(lat+.5, lng+1),
+                       new google.maps.LatLng(lat-.8, lng), // bottom point
+                       new google.maps.LatLng(lat+.5, lng-1)
+                     ];
                     var polygon = new google.maps.Polygon({
-                        paths: paths,
+                        paths: triangleCoords,
                         strokeColor: "#E9BC14",
-                        strokeOpacity: 0.5,
+                        strokeOpacity: 1,
                         strokeWeight: 1,
                         fillColor: "#E9BC14",
-                        fillOpacity: 0.2,
+                        fillOpacity: 0.5,
                         map: map
-                    });                    
-                    // var marker = new google.maps.Marker({
-                    //     position: new google.maps.LatLng(lat, lng),
-                    //     map: map,
-                    //     title: region.name
+                    });
+                    
+                    // state polygon
+                    // var paths = [];
+                    // for (var i = 0; i < region.paths.length; i++) {
+                    //    paths[i] = new google.maps.LatLng(region.paths[i].lat, region.paths[i].lng);
+                    // }
+                    // var polygon = new google.maps.Polygon({
+                    //     paths: paths,
+                    //     strokeColor: "#E9BC14",
+                    //     strokeOpacity: 0.5,
+                    //     strokeWeight: 1,
+                    //     fillColor: "#E9BC14",
+                    //     fillOpacity: 0.2,
+                    //     map: map
                     // });
                 });                                   
             });
@@ -119,9 +181,13 @@
                             map: map,
                             fontSize: 13,
                             align: 'center',
+                            minZoom: 4,
                         });
                         var contentString = '<div class="info-content">'+
                                              '<h1>' + router.name + '</h1>' +
+                                             '<p><a target="_blank" ' + 
+                                             'href="'+ router.site +'">' +
+                                             router.site + '</a></p>' +
                                              '</div>';
                         //var infowindow = new google.maps.InfoWindow(); // multiple infowindows
                         google.maps.event.addListener(marker, 'click', function() {
@@ -133,9 +199,9 @@
                 // add links
                 var start_time = new Date().getTime() / 1000; // TODO remove
                 var animate_links = false; // TODO remove
-                var animate_labels = false; // TODO remove
+                var animate_labels = false; // TODO remove                
                 var linkColorActive = "#912815";
-                var linkColorInactive = "#333333";                        
+                var linkColorInactive = "#000000";                        
                 $.getJSON('links.json', function(links) {
                     $(links).each(function() {
                         var link = this;

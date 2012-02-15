@@ -51,39 +51,39 @@
         "offset": [ 2, 1 ]
     },
     {
-        "router": "Arizona",
+        "router": "UA",
         "offset": [ -2, -1 ]
     },
     {
-        "router": "Arizona",
+        "router": "UA",
         "offset": [ -2, 0 ]
     },
     {
-        "router": "Arizona",
+        "router": "UA",
         "offset": [ -2, 1 ]
     },
     {
-        "router": "Colorado",
+        "router": "CSU",
         "offset": [ 2, -1 ]
     },
     {
-        "router": "Colorado",
+        "router": "CSU",
         "offset": [ 2, 0 ]
     },
     {
-        "router": "Colorado",
+        "router": "CSU",
         "offset": [ 2, 1 ]
     },
     {
-        "router": "Memphis",
+        "router": "UM",
         "offset": [ -2, -1 ]
     },
     {
-        "router": "Memphis",
+        "router": "UM",
         "offset": [ -2, 0 ]
     },
     {
-        "router": "Memphis",
+        "router": "UM",
         "offset": [ -2, 1 ]
     },
     {

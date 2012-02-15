@@ -1,35 +1,35 @@
 [
     {
-        "start": "Salt Lake City",
+        "start": "SPP-SALT",
         "end": "UCLA"
     },
     {
-        "start": "Salt Lake City",
-        "end": "Kansas"
+        "start": "SPP-SALT",
+        "end": "SPP-KANS"
     },
     {
-        "start": "Salt Lake City",
-        "end": "Houston"
+        "start": "SPP-SALT",
+        "end": "SPP-HOUS"
     },
     {
-        "start": "Houston",
-        "end": "Kansas"
+        "start": "SPP-HOUS",
+        "end": "SPP-KANS"
     },
     {
-        "start": "Houston",
-        "end": "Atlanta"
+        "start": "SPP-HOUS",
+        "end": "SPP-ATLA"
     },
     {
-        "start": "Kansas",
-        "end": "Atlanta"
+        "start": "SPP-KANS",
+        "end": "SPP-ATLA"
     },
     {
-        "start": "Kansas",
-        "end": "Washington DC"
+        "start": "SPP-KANS",
+        "end": "SPP-WASH"
     },
     {
-        "start": "Washington DC",
-        "end": "Atlanta"
+        "start": "SPP-WASH",
+        "end": "SPP-ATLA"
     },
     {
         "start": "PARC",
@@ -52,31 +52,31 @@
         "end": "UCLA"
     },
     {
-        "start": "Arizona",
-        "end": "Houston"
+        "start": "UA",
+        "end": "SPP-HOUS"
     },
     {
-        "start": "Memphis",
-        "end": "Atlanta"
+        "start": "UM",
+        "end": "SPP-ATLA"
     },
     {
-        "start": "Memphis",
-        "end": "Atlanta"
+        "start": "UM",
+        "end": "SPP-ATLA"
     },
     {
-        "start": "Colorado",
-        "end": "Salt Lake City"
+        "start": "CSU",
+        "end": "SPP-SALT"
     },
     {
         "start": "WashU",
-        "end": "Kansas"
+        "end": "SPP-KANS"
     },
     {
         "start": "UIUC",
-        "end": "Kansas"
+        "end": "SPP-KANS"
     },
     {
         "start": "NEU",
-        "end": "Washington DC"
+        "end": "SPP-WASH"
     }
 ]
