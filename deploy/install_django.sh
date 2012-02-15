@@ -228,12 +228,12 @@ EOF
 getargs "$@"
 setdefaults
 
-# update_system
-# install_baseline
-# install_python
-# install_webserver
-#  
-# bootstrap_project
+update_system
+install_baseline
+install_python
+install_webserver
+ 
+bootstrap_project
 install_project
 configure_local_settings
 activate_webserver
