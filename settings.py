@@ -172,6 +172,14 @@ GMAP_LINK_ALIVE_INTERVAL = 10
 # Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL
 GMAP_BW_UPDATE_INTERVAL = 0.5
 
+# to deploy static files to s3
+from os import environ
+try:
+    AWS_SECRET_ACCESS_KEY = environ['AWS_SECRET_ACCESS_KEY']
+    AWS_ACCESS_KEY_ID = environ['AWS_ACCESS_KEY_ID']
+except KeyError:
+    pass
+
 try:
     from settings_local import *
 except ImportError:
