@@ -39,6 +39,18 @@
         "offset": [ -2, 1 ]
     },
     {
+        "router": "REMAP",
+        "offset": [ -2, -1 ]
+    },
+    {
+        "router": "REMAP",
+        "offset": [ -2, 0 ]
+    },
+    {
+        "router": "REMAP",
+        "offset": [ -2, 1 ]
+    },
+    {
         "router": "PARC",
         "offset": [ 2, -1 ]
     },

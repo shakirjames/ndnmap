@@ -86,6 +86,14 @@
         "_real_position": [ 34.07282250, -118.43873980 ],
         "position": [ 35.5, -120 ]
     },
+    "REMAP": {
+        "name": "Remap at University of California, Los Angeles",
+        "shortname": "REMAP",
+        "site": "http://spurs.cs.ucla.edu:9695/",
+        "backbone": false,
+        "_real_position": [ 34.07282250, -118.43873980 ],
+        "position": [ 34.4, -122.14807210 ]
+    },
     "UCSD": {
         "name": "University of California San Diego",
         "shortname": "CAIDA/UCSD",
