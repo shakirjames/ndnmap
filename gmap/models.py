@@ -36,9 +36,9 @@ class BandwidthManager(models.Manager):
 class Bandwidth(models.Model):
     """Bandwidth on an NDN network link"""
     link = models.IntegerField()
-    time = models.IntegerField()
-    rx = models.IntegerField()
-    tx = models.IntegerField()
+    time = models.BigIntegerField()
+    rx = models.BigIntegerField()
+    tx = models.BigIntegerField()
     update_date = models.DateTimeField(default=datetime.now, editable=False)
       
     objects = BandwidthManager()
