@@ -176,7 +176,7 @@ install_project() {
     sudo -u $LOCAL_USER mkdir -p /home/$LOCAL_USER/.ssh    
     sudo -u $LOCAL_USER ssh-keyscan -H github.com | sudo -u $LOCAL_USER tee /home/$LOCAL_USER/.ssh/known_hosts
     sudo -u $LOCAL_USER git clone -b $BRANCH $GITREPO $PROJECT_ROOT
-    sudo -u $LOCAL_USER /home/$LOCAL_USER/env/bin/pip -E /home/$LOCAL_USER/env install -r $PROJECT_ROOT/deploy/requirements.txt
+    sudo -u $LOCAL_USER /home/$LOCAL_USER/env/bin/pip install -r $PROJECT_ROOT/deploy/requirements.txt
 }
 
 configure_local_settings() {

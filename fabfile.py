@@ -112,10 +112,10 @@ def test():
     if result.failed and not confirm("Tests failed. Continue anyway?"):
         abort("Aborting at user request.")
 
-def flush():
-    """Flush the app database"""
+def reset():
+    """Reset the app database"""
     virtual_env = '/home/{0}/env'.format(APP_USER)
-    run('{0}/bin/python manage.py flush gmap --noinput'.format(virtual_env))
+    run('{0}/bin/python manage.py reset gmap --noinput'.format(virtual_env))
 
 
 def push(tag=None, static=False):
