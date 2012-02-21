@@ -2,6 +2,5 @@
 *.py[co]
 .coverage
 local.sqlite
-static
 .DS_Store
 Icon?
