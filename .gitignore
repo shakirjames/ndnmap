@@ -1,7 +1,6 @@
 *~
 *.py[co]
 .coverage
-settings_local.py
 local.sqlite
 static
 .DS_Store
