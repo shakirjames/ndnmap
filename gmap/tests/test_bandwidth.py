@@ -6,7 +6,7 @@ from gmap.models import Bandwidth
 class BandwidthSaveTest(TestCase):
     """Test Bandwidth save override method"""
     link = 1
-    time = 1
+    time = 1.
     def setUp(self):
         Bandwidth.objects.all().delete()
         
@@ -43,7 +43,7 @@ class BandwidthAddTest(TestCase):
     
     def test_bw(self):
         from django.core.urlresolvers import reverse 
-        d = (1, 1, 1, 1)
+        d = (1, 1., 1, 1)
         r = self.client.get(reverse('bw', args=(d)))
         b = Bandwidth.objects.filter(link=1)[0]
         self.assertEqual(d, (b.link, b.time, b.rx, b.tx))
@@ -53,7 +53,7 @@ class BandwidthXHRTest(TestCase):
     """Test XMLHttpRequests"""
     def setUp(self):
         Bandwidth.objects.all().delete()
-        self.b = Bandwidth.objects.create(link=1, time=1, rx=1, tx=1)
+        self.b = Bandwidth.objects.create(link=1, time=1., rx=1, tx=1)
     
     def test_xhr_request(self):
         """Test valid JSON data from AJAX request."""
@@ -70,11 +70,11 @@ class BandwidthManagerTest(TestCase):
     """Test BandwidthManager rates"""
     def setUp(self):
         Bandwidth.objects.all().delete() # if any initial_data
-        Bandwidth.objects.create(link=1, time=1, rx=1, tx=1)
-        Bandwidth.objects.create(link=2, time=1, rx=1, tx=1)
-        Bandwidth.objects.create(link=2, time=2, rx=2, tx=2)
-        Bandwidth.objects.create(link=3, time=1, rx=2, tx=10)
-        Bandwidth.objects.create(link=3, time=3, rx=4, tx=20)
+        Bandwidth.objects.create(link=1, time=1., rx=1, tx=1)
+        Bandwidth.objects.create(link=2, time=1., rx=1, tx=1)
+        Bandwidth.objects.create(link=2, time=2., rx=2, tx=2)
+        Bandwidth.objects.create(link=3, time=1., rx=2, tx=10)
+        Bandwidth.objects.create(link=3, time=3., rx=4, tx=20)
     
     def test_no_bw(self):
         """Test no updates"""
