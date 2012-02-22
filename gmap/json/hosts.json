@@ -100,15 +100,15 @@
     },
     {
         "router": "WashU",
-        "offset": [ -2, -1 ]
+        "offset": [ -1, 3 ]
     },
     {
         "router": "WashU",
-        "offset": [ -2, 0 ]
+        "offset": [ -1, 2 ]
     },
     {
         "router": "WashU",
-        "offset": [ -2, 1 ]
+        "offset": [ -1, 1 ]
     },
     {
         "router": "UIUC",
