@@ -195,17 +195,25 @@
 
 
                                 bw = parseFloat(rx) + parseFloat(tx);
-                                if (bw > 250 ) {
-                                    //  bw > 250: Red
-                                    linkPath.set('strokeColor', "#912815");
+                                if (bw > 1000 ) {
+                                    //  bw > 1000: RED
+                                    linkPath.set('strokeColor', "#FF0000");
                                     linkPath.set('strokeWeight', "10");
-                                } else if (bw > 100) {
-                                    // 100 < bw <= 250K: Green
-                                    linkPath.set('strokeColor', "#5DA31D");
+                                } else if (bw > 500 ) {
+                                    //  bw > 250: RedBrown
+                                    linkPath.set('strokeColor', "#912815");
+                                    linkPath.set('strokeWeight', "8");
+                                } else if (bw > 250 ) {
+                                    //  bw > 250: Purple
+                                    linkPath.set('strokeColor', "#800080");
                                     linkPath.set('strokeWeight', "6");
-                                } else {
-                                    // 0 < bw <100: Blue
+                                } else if (bw > 100) {
+                                    // 100 < bw <= 250K: Blue
                                     linkPath.set('strokeColor', "#225486"); // 4592b7
+                                    linkPath.set('strokeWeight', "4");
+                                } else {
+                                    // 0 < bw <100: Green
+                                    linkPath.set('strokeColor', "#5DA31D");
                                     linkPath.set('strokeWeight', "2");
                                 }
                             }, "json");
