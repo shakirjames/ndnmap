@@ -58,8 +58,7 @@
             var map = new google.maps.Map($("#map_canvas")[0], myOptions);
             map.setOptions({styles: stylesArray});
             var infowindow = new google.maps.InfoWindow();
-            var linkColorActive = "#912815";
-            var linkColorInactive = "#000000";
+            var linkColorInactive = "#666666";
             var bwDivisor = 1000.00 // Kbps
             function convertBandwidth(bits){
                 // always show one decimal place
@@ -152,17 +151,13 @@
                                 ((start.position[0] + end.position[0])/2)+1,
                                 (start.position[1] + end.position[1])/2
                         );
-                        // var linkColor = "#4592B7";
-                        // if (start.backbone == true  && end.backbone == true) {
-                        //     linkColor = "#5DA31D";
-                        // }
-                        // link
                         var linkPath = new google.maps.Polyline({
                           path: linkCoordinates,
                           strokeColor: linkColorInactive,
                           map: map,
                           strokeOpacity: 0.7,
-                          strokeWeight: 1
+                          strokeColor: linkColorInactive,
+                          strokeWeight: 4
                         });
                         // traffic label
                         var label = new MapLabel({
@@ -172,25 +167,25 @@
                             fontSize: 18,
                             align: 'center',
                         });
-                        // timers
-                        // $(document).everyTime({{ bw_update_interval }}, function (i) {
-                        //     $.getJSON("{{ bw_url }}"+link.id, function(data) {
-                        //         // TOOD
-                        //         linkPath.set('strokeWeight', 1);
-                        //         if (randn > 5) {
-                        //             linkPath.set('strokeColor', linkColorActive);
-                        //         }
-                        //         else {
-                        //             linkPath.set('strokeColor', linkColorInactive);
-                        //         }
-                        //     });
-                        // }, 0);
-
+                        // update link stats periodically
                         $(document).everyTime({{ bw_update_interval }}, function (i) {
                             $.getJSON("{{ bw_url }}"+link.id, function(data) {
-                                rx = convertBandwidth(data.rx).toString();
-                                tx = convertBandwidth(data.tx).toString();
-                                label.set('text', rx + '/' + tx);
+                                // update link label
+                                rx = convertBandwidth(data.rx);
+                                tx = convertBandwidth(data.tx);
+                                label.set('text', rx.toString() + '/' + tx.toString());
+                                // update link color
+                                bw = parseFloat(rx) + parseFloat(tx);
+                                if (bw > 250 ) {
+                                    //  bw > 250: Red
+                                    linkPath.set('strokeColor', "#912815");
+                                } else if (bw > 100) {
+                                    // 100 < bw <= 250K: Green
+                                    linkPath.set('strokeColor', "#5DA31D");
+                                } else {
+                                    // 0 < bw <100: Blue
+                                    linkPath.set('strokeColor', "#225486"); // 4592b7
+                                }
                             }, "json");
                         }, 0);
                         // infowindow
