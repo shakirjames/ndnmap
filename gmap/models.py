@@ -7,7 +7,7 @@ LINK_ALIVE_INTERVAL = getattr(settings, 'GMAP_LINK_ALIVE_INTERVAL', 5)
 
 
 class BandwidthManager(models.Manager):
-    """Return a tuple of rates (rx, tx) for a link."""
+    """Return a tuple of rates (rx, tx) for a link in Bps."""
     def rates(self, link):
         try:
             b1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]

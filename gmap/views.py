@@ -29,7 +29,7 @@ def bw(request, link , time, rx, tx):
 
 
 def xhr_bw(request, link):
-    """Return JSON data for XMLHttpRequests."""
+    """Return JSON data with link rates in Bps."""
     import json    
     rx, tx = Bandwidth.objects.rates(link)
     data = json.dumps({'rx': rx, 'tx': tx})
