@@ -175,16 +175,38 @@
                                 tx = convertBandwidth(data.tx);
                                 label.set('text', rx.toString() + '/' + tx.toString());
                                 // update link color
+                                // Some Color choices:
+                                // BASICS:
+                                // Black:   #000000
+                                // Gray:    #808080
+                                // Orange:  #FFA500
+                                // Brown:   #A52A2A
+                                // Maroon:  #800000
+                                // Green:   #008000
+                                // Olive:   #808000
+                                // Purple:  #800080
+                                // Blue:    #0000FF
+                                // DarkBlue: #0000A0
+                                // Red:      #FF0000
+
+                                // FANCY:
+                                // Purple:  #8E35EF
+                                // Magenta: #FF00FF
+
+
                                 bw = parseFloat(rx) + parseFloat(tx);
                                 if (bw > 250 ) {
                                     //  bw > 250: Red
                                     linkPath.set('strokeColor', "#912815");
+                                    linkPath.set('strokeWeight', "4");
                                 } else if (bw > 100) {
                                     // 100 < bw <= 250K: Green
                                     linkPath.set('strokeColor', "#5DA31D");
+                                    linkPath.set('strokeWeight', "8");
                                 } else {
                                     // 0 < bw <100: Blue
                                     linkPath.set('strokeColor', "#225486"); // 4592b7
+                                    linkPath.set('strokeWeight', "12");
                                 }
                             }, "json");
                         }, 0);
