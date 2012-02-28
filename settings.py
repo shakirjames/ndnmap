@@ -172,7 +172,7 @@ STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 # Assume zero bandwidth if time since last update > GMAP_LINK_ALIVE_INTERVAL
 GMAP_LINK_ALIVE_INTERVAL = 10
 # Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL
-GMAP_BW_UPDATE_INTERVAL = 0.5
+GMAP_BW_UPDATE_INTERVAL = 1
 
 # to deploy static files to s3
 from os import environ
