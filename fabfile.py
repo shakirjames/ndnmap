@@ -5,6 +5,7 @@ from deploy import ec2
 from fabric.api import *
 from fabric.utils import abort
 from fabric.contrib.console import confirm
+from settings import AWS_STORAGE_BUCKET_NAME
 
 
 # Application name (used for EC2 tag prefix)
@@ -30,7 +31,7 @@ DB_PASS = 'nduffNft'
 # SiteName for Apache
 SITE_NAME = 'example.com'
 # Static URL prefix for Django
-STATIC_URL = 'http://s3.amazonaws.com/ndnmap-media'
+STATIC_URL = 'http://s3.amazonaws.com/{0}'.format(AWS_STORAGE_BUCKET_NAME)
 # Initial data
 INITIAL_DATA = '{0}/deploy/initial_data.json'.format(APP_DIR)
 # Instance Tag
