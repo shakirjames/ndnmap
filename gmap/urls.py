@@ -36,8 +36,9 @@ from gmap.views import MapView, SparkLine
 
 urlpatterns = patterns('gmap.views',
     url(r'^$', MapView.as_view()),
+    url(r'^sparkline/(?P<link>\d+)/$', SparkLine.as_view()),
     url(r'^bw/(?P<link>\d+)/(?P<time>\d+\.\d+)/(?P<rx>\d+)/(?P<tx>\d+)/$','bw', name='bw'),
     url(r'^xhr_bw/(?P<link>\d+)/$', 'xhr_bw', name='xhr_bw'),
-    url(r'^sparkline/(?P<link>\d+)/$', SparkLine.as_view()),
+    url(r'^xhr_traffic/(?P<link>\d+)/$', 'xhr_traffic', name='xhr_traffic'),
     url(r'^json/(?P<file>\w+)/$', 'json'),
 )

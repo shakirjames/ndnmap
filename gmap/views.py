@@ -41,6 +41,21 @@ from django.views.generic import TemplateView
 
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 
+def _get_traffic_json(link):
+    """Return Traiffic in bits"""
+    from utils import gviz_api
+    description = {'traffic': ('number','Traffic')}
+    data = []
+    # TODO chache this results and/or limit the queryset 
+    for traffic in Bandwidth.objects.filter(link=link):
+        data.append({'traffic': traffic.rx + traffic.tx})
+    # load it into gviz_api.DataTable
+    data_table = gviz_api.DataTable(description)
+    data_table.LoadData(data)
+    # create a JSon string
+    json = data_table.ToJSon()
+    return json
+
 
 def bw(request, link , time, rx, tx):
     """Add bandwidth reports"""
@@ -56,6 +71,7 @@ def xhr_bw(request, link):
     data = json.dumps({'rx': rx, 'tx': tx})
     return HttpResponse(data, 'application/json')
 
+
 def json(request, file):
     f = '{0}/gmap/json/{1}.json'.format(settings.SITE_ROOT, file)    
     try:
@@ -64,19 +80,11 @@ def json(request, file):
         raise Http404
     return HttpResponse(data, 'application/json')
 
-def get_traffic_json(link):
-    """Return Traiffic in bits"""
-    from utils import gviz_api
-    description = {'traffic': ('number','Traffic')}
-    data = []
-    for traffic in Bandwidth.objects.filter(link=link):
-        data.append({'traffic': traffic.rx + traffic.tx})
-    # load it into gviz_api.DataTable
-    data_table = gviz_api.DataTable(description)
-    data_table.LoadData(data)
-    # create a JSon string
-    json = data_table.ToJSon()
-    return json
+
+def xhr_traffic(request, link):
+    """Return traffic JSON data in bits"""
+    return HttpResponse(_get_traffic_json(link), 'application/json')
+
 
 class MapView(TemplateView):
     template_name='gmap/map.html'
@@ -84,6 +92,7 @@ class MapView(TemplateView):
     def render_to_response(self, context):
         context = RequestContext(self.request, {
             'bw_url': reverse('xhr_bw', args=(0, )).split('0')[0],
+            'traffic_url': reverse('xhr_traffic', args=(0, )).split('0')[0],
             'bw_update_interval': BW_UPDATE_INTERVAL*1000, # ms
         })
         return super(MapView, self).render_to_response(context)
@@ -93,7 +102,7 @@ class SparkLine(TemplateView):
 
     def render_to_response(self, context):
         context = RequestContext(self.request, {
-            'json_data': get_traffic_json(self.kwargs['link']),
+            'json_data': _get_traffic_json(self.kwargs['link']),
         })
         return super(SparkLine, self).render_to_response(context)
 
