@@ -44,11 +44,11 @@ BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 def _get_traffic_json(link):
     """Return Traiffic in bits"""
     from utils import gviz_api
-    description = {'traffic': ('number','Traffic')}
+    description = {'rx':('number','Received'), 'tx': ('number','Sent')}
     data = []
     # TODO chache this results and/or limit the queryset 
     for traffic in Bandwidth.objects.filter(link=link):
-        data.append({'traffic': traffic.rx + traffic.tx})
+        data.append({'rx': traffic.rx, 'tx':traffic.tx})
     # load it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)
     data_table.LoadData(data)

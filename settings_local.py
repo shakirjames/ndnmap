@@ -15,3 +15,5 @@ DATABASES = {
         'PORT': '',      
     }
 }
+
+GMAP_BW_UPDATE_INTERVAL = 10

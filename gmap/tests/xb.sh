@@ -111,7 +111,7 @@ http_xfer() {
             tx=$((n*TX_BITS))
             # example.com/<link>/<timestamp>/<rx_bits>/<tx_bitd>/            
             echo http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/$tx
-            curl -L http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/$tx
+            curl -L http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/0
         done
         sleep $TIME_INT
     done
