@@ -25,7 +25,8 @@ VOL_MOUNT = '/vol'
 # Volume size in GB
 VOL_SIZE = 10
 # EC2 instance type
-EC2_TYPE = 't1.micro'
+EC2_TYPE = 'm1.small'
+#EC2_TYPE = 't1.micro'
 # Database password
 DB_PASS = 'nduffNft'
 # SiteName for Apache
