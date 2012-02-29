@@ -48,6 +48,9 @@ OPTIONS
      -r RX_BITS     Increase rx bits by RX_BITS every NUM_XFERS (default=4000)
      -t TX_BITS     Increase tx bits by TX_BITS every NUM_XFERS (default=2000)
      -l LINKS       Send rx,tx bits updata for LINKS (default="1 2 3") 
+     
+Example:
+    $SCRIPT_NAME -u localhost:8000 -l 1
 EOF
 }
 
@@ -76,6 +79,10 @@ getargs() {
     if [ -z "$SITE_URL" ]; then 
         die "SITE_URL is required" 1
     fi 
+    if [[ "$SITE_URL" =~ "http://"+ ]] ; then 
+        die "Invalid SITE_URL: localhost:8000" 4
+    fi
+
 }
 
 setdefaults() {
