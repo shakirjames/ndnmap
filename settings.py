@@ -163,6 +163,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 
 # django-storages
+# store static file in S3 bucket named AWS_STORAGE_BUCKET_NAME
 AWS_STORAGE_BUCKET_NAME = 'ndnmap-media'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
