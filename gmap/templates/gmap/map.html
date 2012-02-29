@@ -40,6 +40,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             html { height: 100% }
             body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
             #map_canvas { height: 100% }
+            .link-chart { width:130px; height:50px; }
         </style>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
@@ -49,6 +50,25 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timers.min.js"></script>        
         <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel.min.js"></script>
+        <!-- charts api -->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+          google.load("visualization", "1", {packages:["imagesparkline"]});
+          
+          function drawChart(linkId) {
+            json_data = $.ajax({
+                      url: "{{ traffic_url }}"+linkId,
+                      type: "GET",
+                      dataType: "html",
+                      async:false
+                   }).responseText;
+            if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
+                var data = new google.visualization.DataTable(json_data);
+                var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'+linkId));
+                chart.draw(data, {width: 120, height: 40, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+            }
+          }
+        </script>
         <script type="text/javascript">
             function initialize() {
                 var stylesArray = [
@@ -132,8 +152,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     });
                 });                                   
             });
+            // ndn routers
             $.getJSON("/json/geocode" , function(geocode) {
-                // add routers
                 $.getJSON('/json/routers/', function(routers) {
                     $(routers).each(function() {
                         var router = geocode[this];
@@ -171,7 +191,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         });
                     });
                 });
-                // add links                   
+                // links
                 $.getJSON('/json/links', function(links) {
                     $(links).each(function() {
                         var link = this;
@@ -251,15 +271,17 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             }, "json");
                         }, 0);
                         // infowindow
+                        var infowindow = new google.maps.InfoWindow();
                         var contentString = '<div class="info-content">'+
                                              '<h1>' + start.shortname + ' - ' +
                                              end.shortname + '</h1>' +
-                                             '<p> stats </p>' +
-                                             '</div>';
+                                            '<div id="chart_div'+ link.id +'"' +
+                                             ' class="link-chart"></div>';
                         google.maps.event.addListener(linkPath, 'click', function(event) {
                             infowindow.setPosition(event.latLng);
-                            infowindow.setContent(contentString)
-                            infowindow.open(map);
+                            infowindow.setContent(contentString);                                             
+                            infowindow.open(map); // open before drawing chart
+                            drawChart(link.id);
                         });
                     });
                 });
