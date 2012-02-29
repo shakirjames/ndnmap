@@ -18,11 +18,6 @@ Set environment variables with your AWS credentials (in `~/.bashrc`).
     export AWS_ACCESS_KEY_ID:  AWS Access Key ID
     export AWS_SECRET_ACCESS_KEY:  AWS Secret Access Key
     # export EC2_KEYPAIR=shak # optional
-
-In the [AWS Management Console](http://console.aws.amazon.com/),
-  
-  * create a `webserver` EC2 security group that allows HTTP access (port 80).
-  * create a S3 bucket name `ndnmap-media` (for static files).
     
 Clone `ndnmap`.
 
@@ -35,17 +30,41 @@ Install the packages in ``deploy/requirements.txt``.
 
         sudo easy_install -U pip # requires setuptools
         pip install -r deploy/requirements.txt
+        
+
+Local Server
+----------------
+
+In `ndnmap` dir, run
+    
+    ./manage.py runserver
+    
+Open the home page in your browser: http://localhost:8000/
 
 
-Deployment
-----------
+EC2 Deployment
+--------------
 
-Use [fabric](http://fabfile.org/) to install a LAMP stack on EC2. 
+In the [AWS Management Console](http://console.aws.amazon.com/),
+  
+  * create a `webserver` EC2 security group that allows HTTP access (port 80).
+  * create a S3 bucket, for example `ndnmap-media-<your name>` (for static files).
 
-See the list of available commands.
+In `ndnmap/settting.py`, change `AWS_STORAGE_BUCKET_NAME` to your S3 bucket
+
+[Fabric](http://fabfile.org/) allow us to automate the install of 
+a LAMP (Linux Apache MySQL Python) stack on EC2. 
+
+The ndnmap fab file (fabric script) provides a set of admin task.
+See the list of admin tasks:
 
     fab --list 
-
+    
+The following assumes you have set up [upload your personal ssh keys to EC2](http://alestic.com/2010/10/ec2-ssh-keys).
+If you are using  an ssh keypair from amazon, include it as a parameter
+    
+    fab -i EC2KEYPAIR
+    
 Start an EC2 instance
 
     fab start
@@ -83,6 +102,9 @@ In the `ndnmap/settings.py`, there are two settings:
     
     # Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL (s)
     GMAP_BW_UPDATE_INTERVAL = 0.5
+    
+    # Store static file in S3 bucket
+    AWS_STORAGE_BUCKET_NAME = 'ndnmap-media-<your name>'
 
 
 Testing 
@@ -104,5 +126,5 @@ Generate fake data for visual tests:
 
 Remove all `gmap` records from the database
 
-    fab flush
+    fab reset
 
