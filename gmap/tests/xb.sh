@@ -99,7 +99,7 @@ setdefaults() {
 http_xfer() {
     for (( n=1; n<=$NUM_XFER; n++ )); do
         for l in $LINKS; do
-            t="$(date +%s)". # no %N on Mac OS X
+            t="$(date +%s)".0 # no %N on Mac OS X
             rx=$((n*RX_BITS))
             tx=$((n*TX_BITS))
             # example.com/<link>/<timestamp>/<rx_bits>/<tx_bitd>/            
