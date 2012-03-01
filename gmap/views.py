@@ -48,17 +48,19 @@ TRAFFIC_NUM_VALUES = getattr(settings, 'GMAP_TRAFFIC_NUM_VALUES', 100)
 def _get_traffic_json(link):
     """Return Traiffic in bits"""
     from utils import gviz_api
+    from math import ceil
     description = {'rx':('number','Received'), 'tx': ('number','Sent')}
     data = []
     # TODO chache this results and/or limit the queryset 
-    # TODO make this a model manage
-    
+    # TODO add this to bandwidth model manager
     # for traffic in Bandwidth.objects.filter(link=link):
     #     data.append({'rx': traffic.rx, 'tx':traffic.tx})
-    
     # add a subset of traffic records to speed up ploting 
     count = Bandwidth.objects.filter(link=link).count()
-    step = count//TRAFFIC_NUM_VALUES # floor division 
+    if count < TRAFFIC_NUM_VALUES: 
+        step = 1
+    else:
+        step = int(ceil(count/float(TRAFFIC_NUM_VALUES)))
     for i in xrange(0, count, step):
         traffic = Bandwidth.objects.filter(link=link)[i]
         data.append({'rx': traffic.rx, 'tx':traffic.tx})
