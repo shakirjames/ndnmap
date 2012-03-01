@@ -41,13 +41,26 @@ from django.views.generic import TemplateView
 
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 
+# number of traffic values to return (for sparkline plot)
+TRAFFIC_NUM_VALUES = getattr(settings, 'GMAP_TRAFFIC_NUM_VALUES', 100)
+
+
 def _get_traffic_json(link):
     """Return Traiffic in bits"""
     from utils import gviz_api
     description = {'rx':('number','Received'), 'tx': ('number','Sent')}
     data = []
     # TODO chache this results and/or limit the queryset 
-    for traffic in Bandwidth.objects.filter(link=link):
+    # TODO make this a model manage
+    
+    # for traffic in Bandwidth.objects.filter(link=link):
+    #     data.append({'rx': traffic.rx, 'tx':traffic.tx})
+    
+    # add a subset of traffic records to speed up ploting 
+    count = Bandwidth.objects.filter(link=link).count()
+    step = count//TRAFFIC_NUM_VALUES # floor division 
+    for i in xrange(0, count, step):
+        traffic = Bandwidth.objects.filter(link=link)[i]
         data.append({'rx': traffic.rx, 'tx':traffic.tx})
     # load it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)
