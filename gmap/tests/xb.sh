@@ -90,7 +90,7 @@ setdefaults() {
         NUM_XFER=10
     fi
     if [ -z "$TIME_INT" ]; then
-        TIME_INT=1
+        TIME_INT=.2
     fi
     if [ -z "$RX_BITS" ]; then
         RX_BITS=4000
@@ -107,8 +107,10 @@ http_xfer() {
     for (( n=1; n<=$NUM_XFER; n++ )); do
         for l in $LINKS; do
             t="$(date +%s)".0 # no %N on Mac OS X
-            rx=$((n*RX_BITS))
-            tx=$((n*TX_BITS))
+            rand1=$(od -A n -N 2 -t u2 /dev/urandom)
+            rand2=$(od -A n -N 2 -t u2 /dev/urandom)
+            rx=$((n*RX_BITS*rand1))
+            tx=$((n*TX_BITS*rand2))
             # example.com/<link>/<timestamp>/<rx_bits>/<tx_bitd>/            
             echo http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/$tx
             curl -L http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/$tx

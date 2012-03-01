@@ -54,20 +54,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">
           google.load("visualization", "1", {packages:["imagesparkline"]});
-          
-          function drawChart(linkId) {
-            json_data = $.ajax({
-                      url: "{{ traffic_url }}"+linkId,
-                      type: "GET",
-                      dataType: "html",
-                      async:false
-                   }).responseText;
-            if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
-                var data = new google.visualization.DataTable(json_data);
-                var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'+linkId));
-                chart.draw(data, {width: 210, height: 70, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
-            }
-          }
         </script>
         <script type="text/javascript">
             function initialize() {
@@ -272,17 +258,27 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         }, 0);
                         // infowindow
                         var infowindow = new google.maps.InfoWindow();
-                        var contentString = '<div class="info-content">'+
-                                             '<h1>' + start.shortname + ' - ' +
-                                             end.shortname + '</h1>' +
-                                             '<p>Total Traffic:</p>' +
-                                            '<div id="chart_div'+ link.id +'"' +
-                                             ' class="link-chart"></div>';
                         google.maps.event.addListener(linkPath, 'click', function(event) {
+                            var contentString = '<div class="info-content">'+
+                                                 '<h1>' + start.shortname + ' - ' +
+                                                 end.shortname + '</h1>' +
+                                                 '<p>Total Traffic:</p>' +
+                                                '<div id="chart_div'+ link.id +'"' +
+                                                 ' class="link-chart"></div>';
                             infowindow.setPosition(event.latLng);
                             infowindow.setContent(contentString);                                             
                             infowindow.open(map); // open before drawing chart
-                            drawChart(link.id);
+                            json_data = $.ajax({
+                                      url: "{{ traffic_url }}"+link.id,
+                                      type: "GET",
+                                      dataType: "html",
+                                      async:false
+                                   }).responseText;
+                            if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
+                                var data = new google.visualization.DataTable(json_data);
+                                var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'+link.id));
+                                chart.draw(data, {width: 210, height: 70, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+                            }
                         });
                     });
                 });

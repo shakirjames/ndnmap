@@ -33,7 +33,7 @@
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.db import models
-from math import ceil
+
 
 LINK_ALIVE_INTERVAL = getattr(settings, 'GMAP_LINK_ALIVE_INTERVAL', 5)
 # Max number of traffic values to return (for sparkline plot)
@@ -68,14 +68,9 @@ class BandwidthManager(models.Manager):
     def traffic(self, link, max_values=TRAFFIC_MAX_VALUES):
         """Return a list of bit counts [{'rx':b1, 'tx':b2}, ...]"""
         data = []
-        count = Bandwidth.objects.filter(link=link).count()
-        if count < max_values: 
-            step = 1
-        else:
-            step = int(ceil(count/float(max_values)))
-        for i in xrange(0, count, step):
-            traffic = Bandwidth.objects.filter(link=link).order_by('update_date')[i]
-            data.append({'rx': traffic.rx, 'tx':traffic.tx})
+        traffic = Bandwidth.objects.filter(link=link).order_by('update_date')
+        for t in traffic:
+            data.append({'rx': t.rx, 'tx':t.tx})
         return data
 
     
