@@ -40,7 +40,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             html { height: 100% }
             body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
             #map_canvas { height: 100% }
-            .link-chart { width:130px; height:50px; }
+            .link-chart { width:220px; height:90px; }
         </style>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
@@ -65,7 +65,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
                 var data = new google.visualization.DataTable(json_data);
                 var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'+linkId));
-                chart.draw(data, {width: 120, height: 40, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+                chart.draw(data, {width: 210, height: 70, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
             }
           }
         </script>

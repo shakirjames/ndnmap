@@ -42,7 +42,7 @@ from django.views.generic import TemplateView
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 
 # number of traffic values to return (for sparkline plot)
-TRAFFIC_NUM_VALUES = getattr(settings, 'GMAP_TRAFFIC_NUM_VALUES', 100)
+TRAFFIC_NUM_VALUES = getattr(settings, 'GMAP_TRAFFIC_NUM_VALUES', 200)
 
 
 def _get_traffic_json(link):
