@@ -33,14 +33,16 @@
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.db import models
-
+from math import ceil
 
 LINK_ALIVE_INTERVAL = getattr(settings, 'GMAP_LINK_ALIVE_INTERVAL', 5)
+# Max number of traffic values to return (for sparkline plot)
+TRAFFIC_MAX_VALUES = getattr(settings, 'GMAP_TRAFFIC_MAX_VALUES', 200)
 
 
 class BandwidthManager(models.Manager):
-    """Return a tuple of rates (rx, tx) for a link in Bps."""
     def rates(self, link):
+        """Return a tuple of rates (rx, tx) for a link in Bps."""
         try:
             b1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
             b0 = Bandwidth.objects.filter(link=link).order_by('-update_date')[1]
@@ -63,8 +65,20 @@ class BandwidthManager(models.Manager):
             if tx < 0: tx = 0
             return (rx, tx)
     
+    def traffic(self, link, max_values=TRAFFIC_MAX_VALUES):
+        """Return a list of bit counts [{'rx':b1, 'tx':b2}, ...]"""
+        data = []
+        count = Bandwidth.objects.filter(link=link).count()
+        if count < max_values: 
+            step = 1
+        else:
+            step = int(ceil(count/float(max_values)))
+        for i in xrange(0, count, step):
+            traffic = Bandwidth.objects.filter(link=link).order_by('update_date')[i]
+            data.append({'rx': traffic.rx, 'tx':traffic.tx})
+        return data
 
-
+    
 class Bandwidth(models.Model):
     """Bandwidth on an NDN network link"""
     link = models.IntegerField()
@@ -72,7 +86,10 @@ class Bandwidth(models.Model):
     rx = models.BigIntegerField()
     tx = models.BigIntegerField()
     update_date = models.DateTimeField(default=datetime.now, editable=False)
-      
+
+    class Meta:
+        ordering = ('-update_date', )
+    
     objects = BandwidthManager()
        
     def save(self, *args, **kwargs):
