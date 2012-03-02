@@ -218,6 +218,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 // Some Color choices:
                                 // BASICS:
                                 // Black:   #000000
+                                // Silver:  #C0C0C0
                                 // Gray:    #808080
                                 // Orange:  #FFA500
                                 // Brown:   #A52A2A
@@ -233,25 +234,50 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 // Purple:  #8E35EF
                                 // Magenta: #FF00FF
                                 bw = parseFloat(rx) + parseFloat(tx);
-                                if (bw > 1000 ) {
-                                    //  bw > 1000: RED
+                                //if (bw > 1000 ) {
+                                //    //  bw > 1000: RED
+                                //    linkPath.set('strokeColor', "#FF0000");
+                                //    linkPath.set('strokeWeight', "10");
+                                //} else if (bw > 500 ) {
+                                //    //  bw > 250: RedBrown
+                                //    linkPath.set('strokeColor', "#912815");
+                                //    linkPath.set('strokeWeight', "8");
+                                //} else if (bw > 250 ) {
+                                //    //  bw > 250: Purple
+                                //    linkPath.set('strokeColor', "#800080");
+                                //    linkPath.set('strokeWeight', "6");
+                                //} else if (bw > 100) {
+                                //    // 100 < bw <= 250: Blue
+                                //    linkPath.set('strokeColor', "#225486"); // 4592b7
+                                //    linkPath.set('strokeWeight', "4");
+                                //} else {
+                                //    // 0 < bw <100: Green
+                                //    linkPath.set('strokeColor', "#5DA31D");
+                                //    linkPath.set('strokeWeight', "2");
+                                //}
+                                if (bw > 2000 ) {
+                                    //  bw > 2000: RED
                                     linkPath.set('strokeColor', "#FF0000");
                                     linkPath.set('strokeWeight', "10");
+                                } else if (bw > 1000 ) {
+                                    //  bw > 1000: Orange
+                                    linkPath.set('strokeColor', "#FFA500");
+                                    linkPath.set('strokeWeight', "10");
                                 } else if (bw > 500 ) {
-                                    //  bw > 250: RedBrown
-                                    linkPath.set('strokeColor', "#912815");
+                                    //  bw > 250: Dark Blue
+                                    linkPath.set('strokeColor', "#0000A0");
                                     linkPath.set('strokeWeight', "8");
                                 } else if (bw > 250 ) {
-                                    //  bw > 250: Purple
-                                    linkPath.set('strokeColor', "#800080");
+                                    //  bw > 250: Blue
+                                    linkPath.set('strokeColor', "#0000FF");
                                     linkPath.set('strokeWeight', "6");
                                 } else if (bw > 100) {
-                                    // 100 < bw <= 250: Blue
-                                    linkPath.set('strokeColor', "#225486"); // 4592b7
+                                    // 100 < bw <= 250: Light Blue
+                                    linkPath.set('strokeColor', "#ADD8E6"); // 4592b7
                                     linkPath.set('strokeWeight', "4");
                                 } else {
-                                    // 0 < bw <100: Green
-                                    linkPath.set('strokeColor', "#5DA31D");
+                                    // 0 < bw <100: BLACK
+                                    linkPath.set('strokeColor', "#000000");
                                     linkPath.set('strokeWeight', "2");
                                 }
                             }, "json");
