@@ -61,7 +61,7 @@
         "site": "http://sppsalt1.arl.wustl.edu:9695/",
         "description": "Salt Lake City SPP Node",
         "backbone": true,
-        "position": [ 40.76077930, -111.89104740 ]
+        "position": [ 39.76077930, -111.89104740 ]
     },
     "UCI": {
         "name": "University of California Irvine",

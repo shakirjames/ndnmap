@@ -116,28 +116,28 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
             });
             // ec2 regions
-            $.getJSON('/json/ec2regions/', function(regions) {
-                $(regions).each(function() {
-                    var region = this;
-                    lat = region.position[0];
-                    lng = region.position[1];
-                    var triangleCoords = [
-                       new google.maps.LatLng(lat+.5, lng-1),
-                       new google.maps.LatLng(lat+.5, lng+1),
-                       new google.maps.LatLng(lat-.8, lng), // bottom point
-                       new google.maps.LatLng(lat+.5, lng-1)
-                     ];
-                    var polygon = new google.maps.Polygon({
-                        paths: triangleCoords,
-                        strokeColor: "#E9BC14",
-                        strokeOpacity: 1,
-                        strokeWeight: 1,
-                        fillColor: "#E9BC14",
-                        fillOpacity: 0.5,
-                        map: map
-                    });
-                });                                   
-            });
+            //$.getJSON('/json/ec2regions/', function(regions) {
+            //    $(regions).each(function() {
+            //        var region = this;
+            //        lat = region.position[0];
+            //        lng = region.position[1];
+            //        var triangleCoords = [
+            //           new google.maps.LatLng(lat+.5, lng-1),
+            //           new google.maps.LatLng(lat+.5, lng+1),
+            //           new google.maps.LatLng(lat-.8, lng), // bottom point
+            //           new google.maps.LatLng(lat+.5, lng-1)
+            //         ];
+            //        var polygon = new google.maps.Polygon({
+            //            paths: triangleCoords,
+            //            strokeColor: "#E9BC14",
+            //            strokeOpacity: 1,
+            //            strokeWeight: 1,
+            //            fillColor: "#E9BC14",
+            //            fillOpacity: 0.5,
+            //            map: map
+            //        });
+            //    });                                   
+            //});
             // ndn routers
             $.getJSON("/json/geocode" , function(geocode) {
                 $.getJSON('/json/routers/', function(routers) {
