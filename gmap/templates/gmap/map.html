@@ -219,12 +219,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             fontSize: 18,
                             align: 'center',
                         });
-                        if (link.id == 11) {
-                          // UCI to UCSD
-                          // change position of bw label to put in better place
-                          label.position[0] = label.position[0] + 1;
-                          label.position[1] = label.position[1] - 1;
-                        }
                         // update link stats periodically
                         $(document).everyTime({{ bw_update_interval }}, function (i) {
                             $.getJSON("{{ bw_url }}"+link.id, function(data) {
