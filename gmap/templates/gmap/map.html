@@ -40,7 +40,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             html { height: 100% }
             body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
             #map_canvas { height: 100% }
-            .link-chart { width:220px; height:90px; }
+/*            .link-chart { width:190px; height:63px; }*/
         </style>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
@@ -258,26 +258,44 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         }, 0);
                         // infowindow
                         var infowindow = new google.maps.InfoWindow();
+                        // Assumptions:
+                        //  rx is traffic to link.start
+                        //  tx is traffic from link.start; i.e. to link.end                            
+                        var contentString = '<div class="info-content">'+
+                                             // '<h1>' + start.shortname + ' - ' +
+                                             // end.shortname + '</h1>' +
+                                            '<p class="rx">To <b>'+ start.shortname + '</b>:</p>' +
+                                            '<div id="rx_chart'+ link.id +'" class="link-chart"></div>' +
+                                            '<p class="tx">To <b>'+ end.shortname + '</b>:</p>' +
+                                            '<div id="tx_chart'+ link.id +'" class="link-chart"></div>';
                         google.maps.event.addListener(linkPath, 'click', function(event) {
-                            var contentString = '<div class="info-content">'+
-                                                 '<h1>' + start.shortname + ' - ' +
-                                                 end.shortname + '</h1>' +
-                                                 '<p>Total Traffic:</p>' +
-                                                '<div id="chart_div'+ link.id +'"' +
-                                                 ' class="link-chart"></div>';
                             infowindow.setPosition(event.latLng);
                             infowindow.setContent(contentString);                                             
                             infowindow.open(map); // open before drawing chart
-                            json_data = $.ajax({
-                                      url: "{{ traffic_url }}"+link.id,
+                            rx_json = $.ajax({
+                                      url: "{{ spark_rx_url }}"+link.id,
                                       type: "GET",
                                       dataType: "html",
                                       async:false
                                    }).responseText;
+                            tx_json = $.ajax({
+                                     url: "{{ spark_tx_url }}"+link.id,
+                                     type: "GET",
+                                     dataType: "html",
+                                     async:false
+                                  }).responseText;                                   
                             if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
-                                var data = new google.visualization.DataTable(json_data);
-                                var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'+link.id));
-                                chart.draw(data, {width: 210, height: 70, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+                                // rx
+                                var width = 190;
+                                var height = 63;
+                                var rx_data = new google.visualization.DataTable(rx_json);
+                                var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart'+link.id));
+                                rx_chart.draw(rx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+                                // tx (same as above) 
+                                // TODO refactor                                 
+                                var tx_data = new google.visualization.DataTable(tx_json);
+                                var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart'+link.id));
+                                tx_chart.draw(tx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
                             }
                         });
                     });

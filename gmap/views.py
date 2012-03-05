@@ -37,20 +37,9 @@ from django.http import HttpResponse, Http404
 from gmap.models import Bandwidth
 from django.template import RequestContext
 from django.views.generic import TemplateView
-
+from utils import gviz_api
 
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
-
-
-def _get_traffic_json(link):
-    """Return Traiffic in bits"""
-    from utils import gviz_api
-    from math import ceil
-    description = {'rx':('number','Received'), 'tx': ('number','Sent')}
-    data_table = gviz_api.DataTable(description)
-    data_table.LoadData(Bandwidth.objects.traffic(link))
-    json = data_table.ToJSon()
-    return json
 
 
 def bw(request, link , time, rx, tx):
@@ -76,11 +65,19 @@ def json(request, file):
         raise Http404
     return HttpResponse(data, 'application/json')
 
+def _spark_json(link, field):
+    data_table = gviz_api.DataTable({field:('number', 'Traffic')})
+    qs = Bandwidth.objects.filter(link=link).order_by('update_date')
+    data_table.LoadData(qs.values(field))
+    return data_table.ToJSon()
+    
+def xhr_spark_rx(request, link):
+    """Return rx traffic in bits as JSON data"""
+    return HttpResponse(_spark_json(link, 'rx'), 'application/json')
 
-def xhr_traffic(request, link):
-    """Return traffic JSON data in bits"""
-    return HttpResponse(_get_traffic_json(link), 'application/json')
-
+def xhr_spark_tx(request, link):
+    """Return rx traffic in bits as JSON data"""
+    return HttpResponse(_spark_json(link, 'tx'), 'application/json')
 
 class MapView(TemplateView):
     template_name='gmap/map.html'
@@ -88,7 +85,8 @@ class MapView(TemplateView):
     def render_to_response(self, context):
         context = RequestContext(self.request, {
             'bw_url': reverse('xhr_bw', args=(0, )).split('0')[0],
-            'traffic_url': reverse('xhr_traffic', args=(0, )).split('0')[0],
+            'spark_rx_url': reverse('xhr_spark_rx', args=(0, )).split('0')[0],
+            'spark_tx_url': reverse('xhr_spark_tx', args=(0, )).split('0')[0],
             'bw_update_interval': BW_UPDATE_INTERVAL*1000, # ms
         })
         return super(MapView, self).render_to_response(context)
@@ -97,8 +95,10 @@ class SparkLine(TemplateView):
     template_name='gmap/sparkline.html'
 
     def render_to_response(self, context):
+        link = self.kwargs['link']
         context = RequestContext(self.request, {
-            'json_data': _get_traffic_json(self.kwargs['link']),
+            'rx_data': _spark_json(link, 'rx'),
+            'tx_data': _spark_json(link, 'tx'),
         })
         return super(SparkLine, self).render_to_response(context)
 

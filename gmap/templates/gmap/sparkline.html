@@ -6,14 +6,18 @@
       google.setOnLoadCallback(drawChart);
 
       function drawChart() {
-        var data = new google.visualization.DataTable({{ json_data|safe }});
-        var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'));
-        chart.draw(data, {width: 120, height: 40, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+        var rx_data = new google.visualization.DataTable({{ rx_data|safe }});
+        var tx_data = new google.visualization.DataTable({{ tx_data|safe }});
+        var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart_div'));
+        var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart_div'));
+        rx_chart.draw(rx_data, {width: 120, height: 40, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+        tx_chart.draw(tx_data, {width: 120, height: 40, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
       }
     </script>
   </head>
 
   <body>
-    <div id="chart_div"></div>
+    <div id="rx_chart_div"></div>
+    <div id="tx_chart_div"></div>
   </body>
 </html>
