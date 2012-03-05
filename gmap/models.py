@@ -31,6 +31,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 from datetime import datetime, timedelta
+from itertools import tee, izip
 from django.conf import settings
 from django.db import models
 
@@ -41,39 +42,61 @@ TRAFFIC_MAX_VALUES = getattr(settings, 'GMAP_TRAFFIC_MAX_VALUES', 200)
 
 
 class BandwidthManager(models.Manager):
-    def rates(self, link):
-        """Return a tuple of rates (rx, tx) for a link in Bps."""
+    """Manager that calculates rates (bandwidths) from traffic"""
+        
+    def _pairwise(self, iterable):
+        """s -> (s0,s1), (s1,s2), (s2, s3), ..."""
+        # from itertools recipe
+        # http://docs.python.org/library/itertools.html#recipes
+        a, b = tee(iterable)
+        next(b, None)
+        return izip(a, b)
+    
+    def _get_rate(self, attr, x0, x1):
+        """Return rate (bandwidth) from traffic values"""
+        t_delta = float(x1.time - x0.time)
+        if t_delta == 0:
+            return 0
+        return (getattr(x1, attr) - getattr(x0, attr)) / t_delta
+    
+    def rate(self, link):
+        """Return a rate tuple (rx, tx) for a link in Bps.
+        Args:
+            link: link id        
+        """
         try:
-            b1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
-            b0 = Bandwidth.objects.filter(link=link).order_by('-update_date')[1]
+            t1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
+            t0 = Bandwidth.objects.filter(link=link).order_by('-update_date')[1]
         except IndexError:
             return (0, 0)
         else:
-            alive_int = datetime.now() - b1.update_date
+            alive_int = datetime.now() - t1.update_date
             if alive_int > timedelta(seconds=LINK_ALIVE_INTERVAL):
                 # link is inactive
                 return (0, 0)            
-            t_delta = float(b1.time - b0.time)
-            if t_delta == 0:
-                t_delta = 0.001
-            rx = (b1.rx - b0.rx ) / t_delta
-            tx = (b1.tx - b0.tx ) / t_delta
-            # Test for negative rates:
-            #     Since we ignore 0 bit counts, this can happen if a 
-            #     recent report's (rx,tx) is less than the penultimate one.
+            rx, tx = self._get_rate('rx', t0, t1), self._get_rate('tx', t0, t1) 
+            # Test for negative rate:
+            #    Negative rates happen when the lastest report's (rx,tx) 
+            #    is less than the penultimate one: a counter rolls over.
             if rx < 0: rx = 0
             if tx < 0: tx = 0
             return (rx, tx)
     
-    def traffic(self, link, max_values=TRAFFIC_MAX_VALUES):
-        """Return a list of bit counts [{'rx':b1, 'tx':b2}, ...]"""
-        data = []
-        traffic = Bandwidth.objects.filter(link=link).order_by('update_date')
-        for t in traffic:
-            data.append({'rx': t.rx, 'tx':t.tx})
-        return data
-
+    def rates(self, direction, link):
+        """Return a list of average rates
+        
+        Args:
+            direction: 'rx' or 'tx' traffic
+            link: link id
+        """
+        itr = Bandwidth.objects.filter(link=link).order_by('update_date').iterator()
+        rates = []
+        for t0, t1 in self._pairwise(itr):
+            if t1 is not None:
+                rates.append(self._get_rate(direction, t0, t1))
+        return rates
     
+
 class Bandwidth(models.Model):
     """Bandwidth on an NDN network link"""
     link = models.IntegerField()
