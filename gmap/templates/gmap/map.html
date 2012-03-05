@@ -195,14 +195,23 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         var link = this;
                         var start = geocode[link.start]
                         var end = geocode[link.end]
+                        var latOffset = 1;
+                        var lngOffset = 0;
+                        if (link.id == 11) {
+                            // UCI to UCSD
+                            latOffset = 1;
+                            lngOffset = 1.5;
+                        }                            
+
                         var linkCoordinates = [
                             new google.maps.LatLng(start.position[0]+.1, start.position[1]),
                             new google.maps.LatLng(end.position[0]+.1, end.position[1]),                        
                         ];
                         var linkCenterCoordinates = new google.maps.LatLng(
-                                ((start.position[0] + end.position[0])/2)+1,
-                                (start.position[1] + end.position[1])/2
+                                ((start.position[0] + end.position[0])/2)+latOffset,
+                                ((start.position[1] + end.position[1])/2)+lngOffset
                         );
+                        
                         var linkPath = new google.maps.Polyline({
                           path: linkCoordinates,
                           strokeColor: linkColorInactive,
@@ -211,6 +220,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                           strokeColor: linkColorInactive,
                           strokeWeight: 4
                         });
+
                         // traffic label
                         var label = new MapLabel({
                             text: '',
