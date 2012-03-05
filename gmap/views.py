@@ -66,9 +66,9 @@ def json(request, file):
     return HttpResponse(data, 'application/json')
 
 def _spark_json(link, field):
-    data_table = gviz_api.DataTable({field:('number', 'Traffic')})
-    qs = Bandwidth.objects.filter(link=link).order_by('update_date')
-    data_table.LoadData(qs.values(field))
+    data = ({field: v} for v in Bandwidth.objects.rates(field, link))
+    data_table = gviz_api.DataTable({field:('number', 'Bandwidth')})
+    data_table.LoadData(data)
     return data_table.ToJSon()
     
 def xhr_spark_rx(request, link):

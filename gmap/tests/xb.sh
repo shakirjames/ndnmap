@@ -105,17 +105,18 @@ setdefaults() {
 
 http_xfer() {
     for (( n=1; n<=$NUM_XFER; n++ )); do
+        t0="$(date +%s)" # NOTE %N not supported on Mac OS X
         for l in $LINKS; do
-            t="$(date +%s)".0 # no %N on Mac OS X
-            rand1=$(od -A n -N 2 -t u2 /dev/urandom)
-            rand2=$(od -A n -N 2 -t u2 /dev/urandom)
-            rx=$((n*RX_BITS*rand1))
-            tx=$((n*TX_BITS*rand2))
+            t=$((t0+RANDOM))
+            rx=$((n+RX_BITS))
+            tx=$((n+TX_BITS))
             # example.com/<link>/<timestamp>/<rx_bits>/<tx_bitd>/            
-            echo http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/$tx
-            curl -L http://$SITE_URL/$NDNMAP_PATH/$l/$t/$rx/$tx
+            set -x
+            curl -L http://$SITE_URL/$NDNMAP_PATH/$l/${t}.0/$rx/$tx
+            set +x
+            t0=$t
         done
-        sleep $TIME_INT
+        # sleep $TIME_INT
     done
 }
 
