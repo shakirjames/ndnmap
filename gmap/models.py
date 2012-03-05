@@ -31,26 +31,28 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 from datetime import datetime, timedelta
-from itertools import tee, izip
+from itertools import islice, tee, izip
 from django.conf import settings
 from django.db import models
 
 
+SLIDING_WINDOW_LEN = 4
 LINK_ALIVE_INTERVAL = getattr(settings, 'GMAP_LINK_ALIVE_INTERVAL', 5)
-# Max number of traffic values to return (for sparkline plot)
-TRAFFIC_MAX_VALUES = getattr(settings, 'GMAP_TRAFFIC_MAX_VALUES', 200)
 
 
 class BandwidthManager(models.Manager):
     """Manager that calculates rates (bandwidths) from traffic"""
         
-    def _pairwise(self, iterable):
-        """s -> (s0,s1), (s1,s2), (s2, s3), ..."""
-        # from itertools recipe
-        # http://docs.python.org/library/itertools.html#recipes
-        a, b = tee(iterable)
-        next(b, None)
-        return izip(a, b)
+    def _window(self, iterator, n):
+        """Returns a sliding window (of width n) over data from the iterable
+        s -> (s0,s1,...s[n-1]), (s1,s2,...,sn), ..."""
+        # from http://docs.python.org/release/2.3.5/lib/itertools-example.html
+        result = tuple(islice(iterator, n))
+        if len(result) == n:
+            yield result
+        for elem in iterator:
+            result = result[1:] + (elem,)
+            yield result
     
     def _get_rate(self, attr, x0, x1):
         """Return rate (bandwidth) from traffic values"""
@@ -82,18 +84,18 @@ class BandwidthManager(models.Manager):
             if tx < 0: tx = 0
             return (rx, tx)
     
-    def rates(self, direction, link):
+    def rates(self, direction, link, window_len=SLIDING_WINDOW_LEN):
         """Return a list of average rates
         
         Args:
             direction: 'rx' or 'tx' traffic
             link: link id
         """
-        itr = Bandwidth.objects.filter(link=link).order_by('update_date').iterator()
+        qs  = Bandwidth.objects.filter(link=link).order_by('update_date')
+        itr = qs.iterator()
         rates = []
-        for t0, t1 in self._pairwise(itr):
-            if t1 is not None:
-                rates.append(self._get_rate(direction, t0, t1))
+        for swin in self._window(itr, window_len):
+            rates.append(self._get_rate(direction, swin[0], swin[-1]))
         return rates
     
 
