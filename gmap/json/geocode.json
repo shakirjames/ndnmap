@@ -76,7 +76,8 @@
         "shortname": "UIUC",
         "site": "http://ndn.cs.illinois.edu:9695/",
         "backbone": false,
-        "position": [ 40.10260390, -88.23171080000002 ]
+        "_real_position": [ 40.10260390, -88.23171080000002 ],
+        "position": [ 40.60260390, -88.23171080000002 ]
     },
     "UCLA": {
         "name": "University of California, Los Angeles",
@@ -113,6 +114,7 @@
         "shortname": "WashU",
         "site": "http://128.252.153.193:9695/",
         "backbone": false,
-        "position": [ 38.64907010, -90.30334710 ]
+        "_real_position": [ 38.64907010, -90.30334710 ],
+        "position": [ 38.14907010, -90.30334710 ]
     }
 }
