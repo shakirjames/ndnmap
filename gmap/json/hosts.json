@@ -1,7 +1,7 @@
 [
     {
         "router": "UCSD",
-        "offset": [ -2, -1 ]
+        "offset": [ -1.5, -0.75 ]
     },
     {
         "router": "UCSD",
@@ -9,26 +9,26 @@
     },
     {
         "router": "UCSD",
-        "offset": [ -2, 1 ]
+        "offset": [ -1.5, 0.75 ]
     },
     {
         "router": "UCI",
         "_offset": [ 1, 2 ],
-        "offset": [ 2, -1 ]
+        "offset": [ 1.25, 0 ]
     },
     {
         "router": "UCI",
         "_offset": [ 0, 2 ],
-        "offset": [ 2, 0 ]
+        "offset": [ 1.5, 0.75 ]
     },
     {
         "router": "UCI",
         "_offset": [ -1, 2 ],
-        "offset": [ 2, 1 ]
+        "offset": [ 1.25, 1.5 ]
     },
     {
         "router": "UCLA",
-        "offset": [ -2, -1 ]
+        "offset": [ -1.5, -0.75 ]
     },
     {
         "router": "UCLA",
@@ -36,11 +36,11 @@
     },
     {
         "router": "UCLA",
-        "offset": [ -2, 1 ]
+        "offset": [ -1.5, 0.75 ]
     },
     {
         "router": "REMAP",
-        "offset": [ -2, -1 ]
+        "offset": [ -1.5, -0.75 ]
     },
     {
         "router": "REMAP",
@@ -48,11 +48,11 @@
     },
     {
         "router": "REMAP",
-        "offset": [ -2, 1 ]
+        "offset": [ -1.5, 0.75 ]
     },
     {
         "router": "PARC",
-        "offset": [ 2, -1 ]
+        "offset": [ 1.5, -0.75 ]
     },
     {
         "router": "PARC",
@@ -60,11 +60,11 @@
     },
     {
         "router": "PARC",
-        "offset": [ 2, 1 ]
+        "offset": [ 1.5, 0.75 ]
     },
     {
         "router": "UA",
-        "offset": [ -2, -1 ]
+        "offset": [ -1.5, -0.75 ]
     },
     {
         "router": "UA",
@@ -72,11 +72,11 @@
     },
     {
         "router": "UA",
-        "offset": [ -2, 1 ]
+        "offset": [ -1.5, 0.75 ]
     },
     {
         "router": "CSU",
-        "offset": [ 2, -1 ]
+        "offset": [ 1.5, -0.75 ]
     },
     {
         "router": "CSU",
@@ -84,11 +84,11 @@
     },
     {
         "router": "CSU",
-        "offset": [ 2, 1 ]
+        "offset": [ 1.5, 0.75 ]
     },
     {
         "router": "UM",
-        "offset": [ -2, -1 ]
+        "offset": [ -1.5, -0.75 ]
     },
     {
         "router": "UM",
@@ -96,7 +96,7 @@
     },
     {
         "router": "UM",
-        "offset": [ -2, 1 ]
+        "offset": [ -1.5, 0.75 ]
     },
     {
         "router": "WashU",
@@ -104,7 +104,7 @@
     },
     {
         "router": "WashU",
-        "offset": [ -1, 2 ]
+        "offset": [ -1.25, 2 ]
     },
     {
         "router": "WashU",
@@ -112,7 +112,7 @@
     },
     {
         "router": "UIUC",
-        "offset": [ 2, -1 ]
+        "offset": [ 1.5, -0.75 ]
     },
     {
         "router": "UIUC",
@@ -120,11 +120,11 @@
     },
     {
         "router": "UIUC",
-        "offset": [ 2, 1 ]
+        "offset": [ 1.5, 0.75 ]
     },
     {
         "router": "NEU",
-        "offset": [ 2, -1 ]
+        "offset": [ 1.5, -0.75 ]
     },
     {
         "router": "NEU",
@@ -132,6 +132,6 @@
     },
     {
         "router": "NEU",
-        "offset": [ 2, 1 ]
+        "offset": [ 1.5, 0.75 ]
     }
 ]
