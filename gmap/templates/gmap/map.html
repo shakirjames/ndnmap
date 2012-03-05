@@ -115,31 +115,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             google.maps.event.addListener(marker, 'click', function() {
                 window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
             });
-            // ec2 regions
-            $.getJSON('/json/ec2regions/', function(regions) {
-                $(regions).each(function() {
-                    var region = this;
-                    lat = region.position[0];
-                    lng = region.position[1];
-                    var triangleCoords = [
-                       new google.maps.LatLng(lat+.5, lng-1),
-                       new google.maps.LatLng(lat+.5, lng+1),
-                       new google.maps.LatLng(lat-.8, lng), // bottom point
-                       new google.maps.LatLng(lat+.5, lng-1)
-                     ];
-                    var polygon = new google.maps.Polygon({
-                        paths: triangleCoords,
-                        strokeColor: "#E9BC14",
-                        strokeOpacity: 1,
-                        strokeWeight: 1,
-                        fillColor: "#E9BC14",
-                        fillOpacity: 0.5,
-                        map: map
-                    });
-                });                                   
-            });
             // ndn routers
             $.getJSON("/json/geocode" , function(geocode) {
+                var latLngList = [];            
                 $.getJSON('/json/routers/', function(routers) {
                     $(routers).each(function() {
                         var router = geocode[this];
@@ -165,6 +143,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             align: 'center',
                             minZoom: 4,
                         });
+                        latLngList.push(new google.maps.LatLng(lat, lng))
                         var contentString = '<div class="info-content">'+
                                              '<h1>' + router.name + '</h1>' +
                                              '<p><a target="_blank" ' + 
@@ -176,7 +155,39 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             infowindow.open(map, marker);
                         });
                     });
+                    // Zoom To Fit All Markers on Google Maps API v3
+                    // http://blog.shamess.info/2009/09/29/zoom-to-fit-all-markers-on-google-maps-api-v3/
+                    var bounds = new google.maps.LatLngBounds();
+                    for (var i = 0, ltLgLen = latLngList.length; i < ltLgLen; i++) {
+                        bounds.extend(latLngList[i]);
+                    }
+                    map.fitBounds(bounds);
                 });
+                
+                // ec2 regions
+                $.getJSON('/json/ec2regions/', function(regions) {
+                    $(regions).each(function() {
+                        var region = this;
+                        lat = region.position[0];
+                        lng = region.position[1];
+                        var triangleCoords = [
+                           new google.maps.LatLng(lat+.5, lng-1),
+                           new google.maps.LatLng(lat+.5, lng+1),
+                           new google.maps.LatLng(lat-.8, lng), // bottom point
+                           new google.maps.LatLng(lat+.5, lng-1)
+                         ];
+                        var polygon = new google.maps.Polygon({
+                            paths: triangleCoords,
+                            strokeColor: "#E9BC14",
+                            strokeOpacity: 1,
+                            strokeWeight: 1,
+                            fillColor: "#E9BC14",
+                            fillOpacity: 0.5,
+                            map: map
+                        });
+                    });                                   
+                });
+                
                 // links
                 $.getJSON('/json/links', function(links) {
                     $(links).each(function() {
