@@ -158,23 +158,23 @@ class BandwidthManagerRatesTest(TestCase):
 
     def test_single_value_rates(self):
         Bandwidth.objects.create(link=1, time=1., rx=1, tx=1)
-        self.assertEqual(Bandwidth.objects.rates('rx', 1), [])
-        self.assertEqual(Bandwidth.objects.rates('tx', 1), [])
+        self.assertEqual(Bandwidth.objects.rates('rx', 1, 2), [])
+        self.assertEqual(Bandwidth.objects.rates('tx', 1, 2), [])
             
     def test_1s_interval_rates(self):
         """Test one-second rates"""
         Bandwidth.objects.create(link=1, time=1., rx=1, tx=1)
         Bandwidth.objects.create(link=1, time=2., rx=10, tx=2)
         Bandwidth.objects.create(link=1, time=3., rx=100, tx=4)
-        self.assertEqual(Bandwidth.objects.rates('rx', 1), [9., 90.])
-        self.assertEqual(Bandwidth.objects.rates('tx', 1), [1., 2.])
+        self.assertEqual(Bandwidth.objects.rates('rx', 1, 2), [9., 90.])
+        self.assertEqual(Bandwidth.objects.rates('tx', 1, 2), [1., 2.])
         
     def test_varable_interval_rates(self):
         Bandwidth.objects.create(link=1, time=1., rx=1, tx=1)
         Bandwidth.objects.create(link=1, time=5., rx=13, tx=1)
         Bandwidth.objects.create(link=1, time=7., rx=101, tx=1)
         Bandwidth.objects.create(link=1, time=15., rx=109, tx=1)
-        self.assertEqual(Bandwidth.objects.rates('rx', 1), [3., 44., 1.])
-        self.assertEqual(Bandwidth.objects.rates('tx', 1), [0., 0., 0.])    
+        self.assertEqual(Bandwidth.objects.rates('rx', 1, 2), [3., 44., 1.])
+        self.assertEqual(Bandwidth.objects.rates('tx', 1, 2), [0., 0., 0.])    
     
     
