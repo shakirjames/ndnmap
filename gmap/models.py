@@ -80,8 +80,8 @@ class BandwidthManager(models.Manager):
             # Test for negative rate:
             #    Negative rates happen when the lastest report's (rx,tx) 
             #    is less than the penultimate one: a counter rolls over.
-            if rx < 0: rx = 0
-            if tx < 0: tx = 0
+            if rx < 0: rx = 1
+            if tx < 0: tx = 1
             return (rx, tx)
     
     def rates(self, direction, link, window_len=SLIDING_WINDOW_LEN):
