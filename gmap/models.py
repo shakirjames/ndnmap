@@ -72,10 +72,10 @@ class BandwidthManager(models.Manager):
         except IndexError:
             return (0, 0)
         else:
-            alive_int = datetime.now() - t1.update_date
-            if alive_int > timedelta(seconds=LINK_ALIVE_INTERVAL):
-                # link is inactive
-                return (0, 0)            
+            #alive_int = datetime.now() - t1.update_date
+            #if alive_int > timedelta(seconds=LINK_ALIVE_INTERVAL):
+            #    # link is inactive
+            #    return (0, 0)            
             rx, tx = self._get_rate('rx', t0, t1), self._get_rate('tx', t0, t1) 
             # Test for negative rate:
             #    Negative rates happen when the lastest report's (rx,tx) 
