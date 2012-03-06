@@ -197,10 +197,81 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         var end = geocode[link.end]
                         var latOffset = 1;
                         var lngOffset = 0;
-                        if (link.id == 11) {
-                            // UCI to UCSD
+
+                        if (link.id == 1) {
+                            // UCLA to SALT
+                            latOffset = 0.5;
+                            lngOffset = -0.5;
+                        }
+                        else if (link.id == 2) {
+                            // SALT to KANS
                             latOffset = 1;
-                            lngOffset = 1.5;
+                            lngOffset = 1;
+                        }                            
+                        else if (link.id == 3) {
+                            // SALT to HOUS
+                            latOffset = 0.5;
+                            lngOffset = 0.5;
+                        }                            
+                        else if (link.id == 4) {
+                            // KANS to HOUS
+                            latOffset = 0;
+                            lngOffset = -1;
+                        }                            
+                        else if (link.id == 6) {
+                            // KANS to ATLA
+                            latOffset = 0;
+                            lngOffset = -1;
+                        }                            
+                        else if (link.id == 7) {
+                            // KANS to WASH
+                            latOffset = 0.75;
+                            lngOffset = 0;
+                        }                            
+                        else if (link.id == 8) {
+                            // ATLA to WASH
+                            latOffset = 0.5;
+                            lngOffset = -0.5;
+                        }                            
+                        else if (link.id == 9) {
+                            // UCLA to PARC
+                            latOffset = 0.5;
+                            lngOffset = 0.5;
+                        }                            
+                        else if (link.id == 10) {
+                            // UCLA to UCI
+                            latOffset = 0.5;
+                            lngOffset = 0.5;
+                        }                            
+                        else if (link.id == 11) {
+                            // UCLA to UCSD
+                            latOffset = -1;
+                            lngOffset = 0;
+                        }                            
+                        else if (link.id == 13) {
+                            // ATLA to MEMPHIS
+                            latOffset = 0;
+                            lngOffset = -0.5;
+                        }                            
+                        else if (link.id == 15) {
+                            // KANS to WashU
+                            latOffset = 0;
+                            lngOffset = 0.5;
+                        }                            
+                        else if (link.id == 17) {
+                            // WASH to NEU
+                            latOffset = 0.5;
+                            lngOffset = -0.5;
+                        }                            
+                        else if (link.id == 18) {
+                            // UCLA to REMAP
+                            latOffset = 0.5;
+                            lngOffset = -0.5;
+                        }                            
+                        else  {
+                            // Default
+                            latOffset = 1;
+                            lngOffset = 0;
                         }                            
 
                         var linkCoordinates = [
