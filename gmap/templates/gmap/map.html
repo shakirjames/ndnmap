@@ -99,7 +99,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             map.setOptions({styles: stylesArray});
             var infowindow = new google.maps.InfoWindow();
             var linkColorInactive = "#666666";
-            var bwDivisor = 1000.00 // Kbps
+            var bwDivisor = {{ bw_divisor }}; // 1.0 (Bps), 100.0 (Mbps), ...
             function convertBandwidth(bits){
                 // always show one decimal place
                 return parseFloat(Math.round((bits / bwDivisor) * 10) / 10).toFixed(1);
@@ -339,12 +339,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 var height = 63;
                                 var rx_data = new google.visualization.DataTable(rx_json);
                                 var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart'+link.id));
-                                rx_chart.draw(rx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+                                rx_chart.draw(rx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: true, labelPosition: 'left'});
                                 // tx (same as above) 
                                 // TODO refactor                                 
                                 var tx_data = new google.visualization.DataTable(tx_json);
                                 var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart'+link.id));
-                                tx_chart.draw(tx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+                                tx_chart.draw(tx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: true, labelPosition: 'left'});
                             }
                         });
                     });

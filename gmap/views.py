@@ -40,6 +40,7 @@ from django.views.generic import TemplateView
 from utils import gviz_api
 
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
+BW_DIVISOR = 1000.0 # Kbps
 
 
 def bw(request, link , time, rx, tx):
@@ -66,7 +67,7 @@ def json(request, file):
     return HttpResponse(data, 'application/json')
 
 def _spark_json(link, field):
-    data = ({field: v} for v in Bandwidth.objects.rates(field, link))
+    data = ({field: (v/BW_DIVISOR)} for v in Bandwidth.objects.rates(field, link))
     data_table = gviz_api.DataTable({field:('number', 'Bandwidth')})
     data_table.LoadData(data)
     return data_table.ToJSon()
@@ -88,6 +89,7 @@ class MapView(TemplateView):
             'spark_rx_url': reverse('xhr_spark_rx', args=(0, )).split('0')[0],
             'spark_tx_url': reverse('xhr_spark_tx', args=(0, )).split('0')[0],
             'bw_update_interval': BW_UPDATE_INTERVAL*1000, # ms
+            'bw_divisor': BW_DIVISOR,
         })
         return super(MapView, self).render_to_response(context)
 
