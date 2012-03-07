@@ -107,7 +107,8 @@ http_xfer() {
     for (( n=1; n<=$NUM_XFER; n++ )); do
         t0="$(date +%s)" # NOTE %N not supported on Mac OS X
         for l in $LINKS; do
-            t=$((t0+RANDOM))
+            #t=$((t0+RANDOM))
+            t="$(date +%s)"
             rx=$((n+RX_BITS))
             tx=$((n+TX_BITS))
             # example.com/<link>/<timestamp>/<rx_bits>/<tx_bitd>/            

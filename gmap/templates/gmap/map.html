@@ -40,7 +40,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             html { height: 100% }
             body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
             #map_canvas { height: 100% }
-/*            .link-chart { width:190px; height:63px; }*/
+            .link-chart { width:200px; height:63px; background:url({{ STATIC_URL }}img/loader.gif) no-repeat 50% 20%;}
         </style>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
@@ -392,31 +392,28 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             infowindow.setPosition(event.latLng);
                             infowindow.setContent(contentString);                                             
                             infowindow.open(map); // open before drawing chart
-                            rx_json = $.ajax({
-                                      url: "{{ spark_rx_url }}"+link.id,
-                                      type: "GET",
-                                      dataType: "html",
-                                      async:false
-                                   }).responseText;
-                            tx_json = $.ajax({
-                                     url: "{{ spark_tx_url }}"+link.id,
-                                     type: "GET",
-                                     dataType: "html",
-                                     async:false
-                                  }).responseText;                                   
-                            if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
-                                // rx
-                                var width = 190;
-                                var height = 63;
-                                var rx_data = new google.visualization.DataTable(rx_json);
-                                var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart'+link.id));
-                                rx_chart.draw(rx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: true, labelPosition: 'left'});
-                                // tx (same as above) 
-                                // TODO refactor                                 
-                                var tx_data = new google.visualization.DataTable(tx_json);
-                                var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart'+link.id));
-                                tx_chart.draw(tx_data, {width: width, height: height, showAxisLines: false,  showValueLabels: true, labelPosition: 'left'});
-                            }
+                            $.ajax({
+                                url: "{{ spark_rx_url }}"+link.id,
+                                success: function(rx_json) {
+                                    if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
+                                        var rx_data = new google.visualization.DataTable(rx_json); 
+                                        var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart'+link.id));
+                                        rx_chart.draw(rx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
+                                    }
+                                }
+                            });
+                            // // tx (same as above) 
+                            // // TODO refactor
+                            $.ajax({
+                                url: "{{ spark_tx_url }}"+link.id,
+                                success: function(tx_json) {
+                                    if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
+                                        var tx_data = new google.visualization.DataTable(tx_json);
+                                        var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart'+link.id));
+                                        tx_chart.draw(tx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
+                                    }
+                                }
+                            });
                         });
                     });
                 });
