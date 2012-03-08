@@ -59,14 +59,11 @@ class BandwidthManager(models.Manager):
     def _get_rate(self, attr, x0, x1):
         """Return rate (bandwidth) from traffic values"""
         time_delta = float(x1.time - x0.time)
-        traffic_delta = getattr(x1, attr) - getattr(x0, attr)
-        if traffic_delta < TRAFFIC_DELTA_MIN:
-            msg = '{0} is less than {1}: ({2}, {3}), ({4}, {5})'
-            logging.debug(msg.format(attr, TRAFFIC_DELTA_MIN, x0.time,
-                            getattr(x0, attr), x1.time, getattr(x1,attr)))
+        bits_delta = getattr(x1, attr) - getattr(x0, attr)
         if time_delta == 0:
             return 0
-        return traffic_delta / time_delta
+        rate = bits_delta / time_delta        
+        return rate
     
     def rate(self, link):
         """Return a rate tuple (rx, tx) for a link in Bps.
@@ -74,8 +71,11 @@ class BandwidthManager(models.Manager):
             link: link id        
         """
         try:
-            t1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
+            # NOTE the order of the reads.
             t0 = Bandwidth.objects.filter(link=link).order_by('-update_date')[1]
+            # At this point, a write may have occurred. Hence, its better
+            # to read the latest value after read penultimate one. 
+            t1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
         except IndexError:
             logging.error('IndexError: retrieving most recent rows from db.')
             return (0, 0)

@@ -301,12 +301,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 // update link label
                                 rx = data.rx;
                                 tx= data.tx;
-                                if (link.id == 12 && rx == 0){
-                                    alert('server said rx=0');
-                                }
-                                if (link.id == 12 && rx == 0){
-                                    alert('server said tx=0');
-                                }
                                 label.set('text', rx.toString() + '/' + tx.toString());
                                 // update link color
                                 // Some Color choices:
