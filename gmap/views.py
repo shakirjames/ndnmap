@@ -41,7 +41,10 @@ from utils import gviz_api
 
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 BW_DIVISOR = 1000.0 # Kbps
+BW_DECIMAL_POINTS=3
 
+def _convert_bw(bw):
+    return round(bw/BW_DIVISOR, BW_DECIMAL_POINTS)
 
 def bw(request, link , time, rx, tx):
     """Add bandwidth reports"""
@@ -51,10 +54,10 @@ def bw(request, link , time, rx, tx):
 
 
 def xhr_bw(request, link):
-    """Return JSON data with link rate in Bps."""
+    """Return JSON data with link rate."""
     import json    
     rx, tx = Bandwidth.objects.rate(link)
-    data = json.dumps({'rx': rx, 'tx': tx})
+    data = json.dumps({'rx': _convert_bw(rx), 'tx': _convert_bw(tx)})
     return HttpResponse(data, 'application/json')
 
 
@@ -67,7 +70,7 @@ def json(request, file):
     return HttpResponse(data, 'application/json')
 
 def _spark_json(link, field):
-    data = ({field: (v/BW_DIVISOR)} for v in Bandwidth.objects.rates(field, link))
+    data = ({field: (_convert_bw(v))} for v in Bandwidth.objects.rates(field, link))
     data_table = gviz_api.DataTable({field:('number', 'Bandwidth')})
     data_table.LoadData(data)
     return data_table.ToJSon()

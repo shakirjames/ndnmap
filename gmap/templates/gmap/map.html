@@ -40,7 +40,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             html { height: 100% }
             body { height: 100%; margin: 0; padding: 0; font-family: 'Arial'; font-size:80%; }
             #map_canvas { height: 100% }
-            .link-chart { width:200px; height:63px; background:url({{ STATIC_URL }}img/loader.gif) no-repeat 50% 20%;}
+            .info-content { min-width: 210px; min-height:210px;}
+            .link-chart { min-width:200px; min-height:63px; background:url({{ STATIC_URL }}img/loader.gif) no-repeat 50% 20%;}
         </style>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
@@ -99,13 +100,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             map.setOptions({styles: stylesArray});
             var infowindow = new google.maps.InfoWindow();
             var linkColorInactive = "#666666";
-            var bwDivisor = {{ bw_divisor }}; // 1.0 (Bps), 100.0 (Mbps), ...
-            function convertBandwidth(bits){
-                // always show one decimal place
-                return parseFloat(Math.round((bits / bwDivisor) * 10) / 10).toFixed(1);
-            }
-            // title
-            // use a marker because labels are not clickable
+            // title (use a marker because labels are not clickable)
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(45, -96.6),
                 map: map,
@@ -304,8 +299,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         $(document).everyTime({{ bw_update_interval }}, function (i) {
                             $.getJSON("{{ bw_url }}"+link.id, function(data) {
                                 // update link label
-                                rx = convertBandwidth(data.rx);
-                                tx = convertBandwidth(data.tx);
+                                rx = data.rx;
+                                tx= data.tx;
                                 label.set('text', rx.toString() + '/' + tx.toString());
                                 // update link color
                                 // Some Color choices:
