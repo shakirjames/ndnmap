@@ -10,8 +10,8 @@
         var tx_data = new google.visualization.DataTable({{ tx_data|safe }});
         var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart_div'));
         var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart_div'));
-        rx_chart.draw(rx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'left'});
-        tx_chart.draw(tx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'left'});
+        rx_chart.draw(rx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
+        tx_chart.draw(tx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
       }
     </script>
   </head>

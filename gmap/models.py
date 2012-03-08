@@ -34,8 +34,10 @@ from datetime import datetime, timedelta
 from itertools import islice, tee, izip
 from django.conf import settings
 from django.db import models
+import logging
 
-
+# output log if difference in traffic is less than than TRAFFIC_DELTA_MIN
+TRAFFIC_DELTA_MIN = 1000
 SLIDING_WINDOW_LEN = 4
 LINK_ALIVE_INTERVAL = getattr(settings, 'GMAP_LINK_ALIVE_INTERVAL', 5)
 
@@ -56,10 +58,13 @@ class BandwidthManager(models.Manager):
     
     def _get_rate(self, attr, x0, x1):
         """Return rate (bandwidth) from traffic values"""
-        t_delta = float(x1.time - x0.time)
-        if t_delta == 0:
+        time_delta = float(x1.time - x0.time)
+        traffic_delta = getattr(x1, attr) - getattr(x0, attr)
+        if traffic_delta < TRAFFIC_DELTA_MIN:
+            logging.error('{0} is less than {1}'.format(attr, TRAFFIC_DELTA_MIN))
+        if time_delta == 0:
             return 0
-        return (getattr(x1, attr) - getattr(x0, attr)) / t_delta
+        return traffic_delta / time_delta
     
     def rate(self, link):
         """Return a rate tuple (rx, tx) for a link in Bps.
