@@ -61,7 +61,8 @@ class BandwidthManager(models.Manager):
         time_delta = float(x1.time - x0.time)
         traffic_delta = getattr(x1, attr) - getattr(x0, attr)
         if traffic_delta < TRAFFIC_DELTA_MIN:
-            logging.error('{0} is less than {1}'.format(attr, TRAFFIC_DELTA_MIN))
+            logging.debug('@time {0}, {1} is less than {2}'.format(x1.time, 
+                            attr, TRAFFIC_DELTA_MIN))
         if time_delta == 0:
             return 0
         return traffic_delta / time_delta
