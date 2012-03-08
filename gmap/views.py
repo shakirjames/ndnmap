@@ -41,7 +41,7 @@ from utils import gviz_api
 
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 BW_DIVISOR = 1000.0 # Kbps
-BW_DECIMAL_POINTS=3
+BW_DECIMAL_POINTS=1
 
 def bw(request, link , time, rx, tx):
     """Add bandwidth reports"""
