@@ -37,7 +37,7 @@ from django.db import models
 import logging
 
 # output log if difference in traffic is less than than TRAFFIC_DELTA_MIN
-TRAFFIC_DELTA_MIN = 1000
+TRAFFIC_DELTA_MIN = 1000.0
 SLIDING_WINDOW_LEN = 4
 LINK_ALIVE_INTERVAL = getattr(settings, 'GMAP_LINK_ALIVE_INTERVAL', 5)
 
@@ -61,8 +61,9 @@ class BandwidthManager(models.Manager):
         time_delta = float(x1.time - x0.time)
         traffic_delta = getattr(x1, attr) - getattr(x0, attr)
         if traffic_delta < TRAFFIC_DELTA_MIN:
-            logging.debug('@time {0}, {1} is less than {2}'.format(x1.time, 
-                            attr, TRAFFIC_DELTA_MIN))
+            msg = '{0} is less than {1}: ({2}, {3}), ({4}, {5})'
+            logging.debug(msg.format(attr, TRAFFIC_DELTA_MIN, x0.time,
+                            getattr(x0, attr), x1.time, getattr(x1,attr)))
         if time_delta == 0:
             return 0
         return traffic_delta / time_delta
@@ -76,6 +77,7 @@ class BandwidthManager(models.Manager):
             t1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
             t0 = Bandwidth.objects.filter(link=link).order_by('-update_date')[1]
         except IndexError:
+            logging.error('IndexError: retrieving most recent rows from db.')
             return (0, 0)
         else:
             #alive_int = datetime.now() - t1.update_date
