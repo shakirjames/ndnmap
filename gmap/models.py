@@ -34,7 +34,6 @@ from datetime import datetime, timedelta
 from itertools import islice, tee, izip
 from django.conf import settings
 from django.db import models
-import logging
 
 # output log if difference in traffic is less than than TRAFFIC_DELTA_MIN
 TRAFFIC_DELTA_MIN = 1000.0
@@ -77,7 +76,6 @@ class BandwidthManager(models.Manager):
             # to read the latest value after read penultimate one. 
             t1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
         except IndexError:
-            logging.error('IndexError: retrieving most recent rows from db.')
             return (0, 0)
         else:
             #alive_int = datetime.now() - t1.update_date
