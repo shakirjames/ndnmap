@@ -31,7 +31,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 from django.conf.urls.defaults import patterns, url
-from gmap.views import MapView, SparkLine
+from gmap.views import MapView, SparkLine, DebugView
 
 
 urlpatterns = patterns('gmap.views',
@@ -42,4 +42,5 @@ urlpatterns = patterns('gmap.views',
     url(r'^xhr_sparkline/rx/(?P<link>\d+)/$', 'xhr_spark_rx', name='xhr_spark_rx'),
     url(r'^xhr_sparkline/tx/(?P<link>\d+)/$', 'xhr_spark_tx', name='xhr_spark_tx'),
     url(r'^json/(?P<file>\w+)/$', 'json'),
+    url(r'^debug/$', DebugView.as_view()),
 )

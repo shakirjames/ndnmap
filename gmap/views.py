@@ -83,6 +83,7 @@ def xhr_spark_tx(request, link):
     """Return rx traffic in bits as JSON data"""
     return HttpResponse(_spark_json(link, 'tx'), 'application/json')
 
+
 class MapView(TemplateView):
     template_name='gmap/map.html'
 
@@ -107,3 +108,15 @@ class SparkLine(TemplateView):
         })
         return super(SparkLine, self).render_to_response(context)
 
+
+class DebugView(TemplateView):
+    # simple view for django debug toolbar to show sql query
+    template_name='gmap/debug.html'
+        
+    def render_to_response(self, context):
+        link_id = 1
+        context = RequestContext(self.request, {
+            'rate': Bandwidth.objects.rate(link_id),
+        })
+        return super(DebugView, self).render_to_response(context)
+    
