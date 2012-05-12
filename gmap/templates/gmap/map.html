@@ -45,11 +45,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </style>
         <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
-        </script>    
+        </script>
         <script type="text/javascript"
             src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk&sensor=false">
         </script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timers.min.js"></script>        
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timers.min.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel.min.js"></script>
         <!-- charts api -->
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -57,95 +57,61 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           google.load("visualization", "1", {packages:["imagesparkline"]});
         </script>
         <script type="text/javascript">
-            function initialize() {
+            function init_map() {
                 var stylesArray = [
                     {
                         featureType: "road",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
+                        stylers: [ { visibility: "off" } ]
                     },{
                         featureType: "transit",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
+                        stylers: [ { visibility: "off" } ]
                     },{
                         featureType: "poi",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
+                        stylers: [ { visibility: "off" } ]
                     },{
                         featureType: "administrative",
-                        stylers: [
-                            { visibility: "simplified" }
-                        ]
+                        stylers: [ { visibility: "simplified" } ]
                     },{
                         featureType: "administrative",
                         elementType: "labels",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
+                        stylers: [ { visibility: "off" } ]
                     }
-                ]
-            var us = new google.maps.LatLng(38.6,-96.6);
-            var myOptions = {
-                zoom: 5,
-                center: us,
-                mapTypeControl: false,
-                scaleControl: false,
-                streetViewControl: false,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map($("#map_canvas")[0], myOptions);
-            map.setOptions({styles: stylesArray});
-            var infowindow = new google.maps.InfoWindow();
-            var linkColorInactive = "#666666";
-            // title (use a marker because labels are not clickable)
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(45, -96.6),
-                map: map,
-                title: '',
-                icon: '{{ STATIC_URL }}img/ndn_testbed.png'
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-                window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
-            });
+                ];
+                var us = new google.maps.LatLng(38.6,-96.6);
+                var myOptions = {
+                    zoom: 5,
+                    center: us,
+                    mapTypeControl: false,
+                    scaleControl: false,
+                    streetViewControl: false,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map($("#map_canvas")[0], myOptions);
+                map.setOptions({styles: stylesArray});
+                var infowindow = new google.maps.InfoWindow();
+                // title (use a marker because labels are not clickable)
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(45, -96.6),
+                    map: map,
+                    title: '',
+                    icon: '{{ STATIC_URL }}img/ndn_testbed.png'
+                    });
+                google.maps.event.addListener(marker, 'click', function() {
+                    window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
+                    });
+                return map;
+            }
 
-            // ec2 regions
-            //$.getJSON('/json/ec2regions/', function(regions) {
-            //    $(regions).each(function() {
-            //        var region = this;
-            //        lat = region.position[0];
-            //        lng = region.position[1];
-            //        var triangleCoords = [
-            //           new google.maps.LatLng(lat+.5, lng-1),
-            //           new google.maps.LatLng(lat+.5, lng+1),
-            //           new google.maps.LatLng(lat-.8, lng), // bottom point
-            //           new google.maps.LatLng(lat+.5, lng-1)
-            //         ];
-            //        var polygon = new google.maps.Polygon({
-            //            paths: triangleCoords,
-            //            strokeColor: "#E9BC14",
-            //            strokeOpacity: 1,
-            //            strokeWeight: 1,
-            //            fillColor: "#E9BC14",
-            //            fillOpacity: 0.5,
-            //            map: map
-            //        });
-            //    });                                   
-            //});
-            
-            // ndn routers
-            $.getJSON("/json/geocode" , function(geocode) {
-                var latLngList = [];            
-                $.getJSON('/json/routers/', function(routers) {
+            function init_routers(url, map, geocode) {
+                $.getJSON(url, function(routers) {
+                    var bounds = new google.maps.LatLngBounds();
                     $(routers).each(function() {
                         var router = geocode[this];
                         if (router.backbone == true) {
                             icon = '{{ STATIC_URL }}img/circle.png';
-                        } 
+                        }
                         else {
-                            icon = '{{ STATIC_URL }}img/rectangle.png';                    
+                            icon = '{{ STATIC_URL }}img/rectangle.png';
                         }
                         lat = router.position[0];
                         lng = router.position[1];
@@ -163,257 +129,26 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             align: 'center',
                             minZoom: 4,
                         });
-                        latLngList.push(new google.maps.LatLng(lat, lng))
-                        var contentString = '<div class="info-content">'+
-                                             '<h1>' + router.name + '</h1>' +
-                                             '<p><a target="_blank" ' + 
-                                             'href="'+ router.site +'">' +
-                                             router.site + '</a></p>' +
-                                             '</div>';
-                        google.maps.event.addListener(marker, 'click', function() {
-                            infowindow.setContent(contentString)
-                            infowindow.open(map, marker);
-                        });
+                        bounds.extend(new google.maps.LatLng(lat, lng));
+                        var content = '<div class="info-content">'+
+                            '<h1>' + router.name + '</h1><p>'+
+                            '<a target="_blank" href="'+ router.site + '">'+
+                            router.site + '</a>'+
+                            '</p></div>';
+                        google.maps.event.addListener(marker, 'click',
+                            function() {
+                                infowindow.setContent(contentString)
+                                infowindow.open(map, marker);
+                            });
                     });
                     // Zoom To Fit All Markers on Google Maps API v3
                     // http://blog.shamess.info/2009/09/29/zoom-to-fit-all-markers-on-google-maps-api-v3/
-                    var bounds = new google.maps.LatLngBounds();
-                    for (var i = 0, ltLgLen = latLngList.length; i < ltLgLen; i++) {
-                        bounds.extend(latLngList[i]);
-                    }
                     map.fitBounds(bounds);
                 });
-                
-                // links
-                $.getJSON('/json/links', function(links) {
-                    $(links).each(function() {
-                        var link = this;
-                        var start = geocode[link.start]
-                        var end = geocode[link.end]
-                        var latOffset = 1;
-                        var lngOffset = 0;
+            }
 
-                        if (link.id == 1) {
-                            // UCLA to SALT
-                            latOffset = 0.5;
-                            lngOffset = -0.5;
-                        }
-                        else if (link.id == 2) {
-                            // SALT to KANS
-                            latOffset = 1;
-                            lngOffset = 1;
-                        }                            
-                        else if (link.id == 3) {
-                            // SALT to HOUS
-                            latOffset = 0.5;
-                            lngOffset = 0.5;
-                        }                            
-                        else if (link.id == 4) {
-                            // KANS to HOUS
-                            latOffset = 0;
-                            lngOffset = -1;
-                        }                            
-                        else if (link.id == 6) {
-                            // KANS to ATLA
-                            latOffset = 0;
-                            lngOffset = -1;
-                        }                            
-                        else if (link.id == 7) {
-                            // KANS to WASH
-                            latOffset = 0.75;
-                            lngOffset = 0;
-                        }                            
-                        else if (link.id == 8) {
-                            // ATLA to WASH
-                            latOffset = 0.5;
-                            lngOffset = -0.5;
-                        }                            
-                        else if (link.id == 9) {
-                            // UCLA to PARC
-                            latOffset = 0.5;
-                            lngOffset = 0.5;
-                        }                            
-                        else if (link.id == 10) {
-                            // UCLA to UCI
-                            latOffset = 0.5;
-                            lngOffset = 0.5;
-                        }                            
-                        else if (link.id == 11) {
-                            // UCLA to UCSD
-                            latOffset = -1;
-                            lngOffset = 0;
-                        }                            
-                        else if (link.id == 13) {
-                            // ATLA to MEMPHIS
-                            latOffset = 0;
-                            lngOffset = -0.5;
-                        }                            
-                        else if (link.id == 15) {
-                            // KANS to WashU
-                            latOffset = 0;
-                            lngOffset = 0.5;
-                        }                            
-                        else if (link.id == 17) {
-                            // WASH to NEU
-                            latOffset = 0.5;
-                            lngOffset = -0.5;
-                        }                            
-                        else if (link.id == 18) {
-                            // UCLA to REMAP
-                            latOffset = 0.5;
-                            lngOffset = -0.5;
-                        }                            
-                        else  {
-                            // Default
-                            latOffset = 1;
-                            lngOffset = 0;
-                        }                            
-
-                        var linkCoordinates = [
-                            new google.maps.LatLng(start.position[0]+.1, start.position[1]),
-                            new google.maps.LatLng(end.position[0]+.1, end.position[1]),                        
-                        ];
-                        var linkCenterCoordinates = new google.maps.LatLng(
-                                ((start.position[0] + end.position[0])/2)+latOffset,
-                                ((start.position[1] + end.position[1])/2)+lngOffset
-                        );
-                        
-                        var linkPath = new google.maps.Polyline({
-                          path: linkCoordinates,
-                          strokeColor: linkColorInactive,
-                          map: map,
-                          strokeOpacity: 0.7,
-                          strokeColor: linkColorInactive,
-                          strokeWeight: 4
-                        });
-
-                        // traffic label
-                        var label = new MapLabel({
-                            text: '',
-                            position: linkCenterCoordinates,
-                            map: map,
-                            fontSize: 18,
-                            align: 'center',
-                        });
-                        // update link stats periodically
-                        $(document).everyTime({{ bw_update_interval }}, function (i) {
-                            $.getJSON("{{ bw_url }}"+link.id, function(data) {
-                                // update link label
-                                rx = data.rx;
-                                tx= data.tx;
-                                label.set('text', rx.toString() + '/' + tx.toString());
-                                // update link color
-                                // Some Color choices:
-                                // BASICS:
-                                // Black:   #000000
-                                // Silver:  #C0C0C0
-                                // Gray:    #808080
-                                // Orange:  #FFA500
-                                // Brown:   #A52A2A
-                                // Maroon:  #800000
-                                // Green:   #008000
-                                // Olive:   #808000
-                                // Purple:  #800080
-                                // Blue:    #0000FF
-                                // SlateBlue: #357EC7
-                                // DarkBlue: #0000A0
-                                // Red:      #FF0000
-
-                                // FANCY:
-                                // Purple:  #8E35EF
-                                // Magenta: #FF00FF
-                                bw = parseFloat(rx) + parseFloat(tx);
-                                //if (bw > 1000 ) {
-                                //    //  bw > 1000: RED
-                                //    linkPath.set('strokeColor', "#FF0000");
-                                //    linkPath.set('strokeWeight', "10");
-                                //} else if (bw > 500 ) {
-                                //    //  bw > 250: RedBrown
-                                //    linkPath.set('strokeColor', "#912815");
-                                //    linkPath.set('strokeWeight', "8");
-                                //} else if (bw > 250 ) {
-                                //    //  bw > 250: Purple
-                                //    linkPath.set('strokeColor', "#800080");
-                                //    linkPath.set('strokeWeight', "6");
-                                //} else if (bw > 100) {
-                                //    // 100 < bw <= 250: Blue
-                                //    linkPath.set('strokeColor', "#225486"); // 4592b7
-                                //    linkPath.set('strokeWeight', "4");
-                                //} else {
-                                //    // 0 < bw <100: Green
-                                //    linkPath.set('strokeColor', "#5DA31D");
-                                //    linkPath.set('strokeWeight', "2");
-                                //}
-                                if (bw > 2000 ) {
-                                    //  bw > 2000: RED
-                                    linkPath.set('strokeColor', "#FF0000");
-                                    linkPath.set('strokeWeight', "10");
-                                } else if (bw > 1000 ) {
-                                    //  bw > 1000: Orange
-                                    linkPath.set('strokeColor', "#FFA500");
-                                    linkPath.set('strokeWeight', "10");
-                                } else if (bw > 500 ) {
-                                    //  bw > 250: Dark Blue
-                                    linkPath.set('strokeColor', "#0000A0");
-                                    linkPath.set('strokeWeight', "8");
-                                } else if (bw > 250 ) {
-                                    //  bw > 250: Blue
-                                    linkPath.set('strokeColor', "#0000FF");
-                                    linkPath.set('strokeWeight', "6");
-                                } else if (bw > 100) {
-                                    // 100 < bw <= 250: Slate Blue
-                                    linkPath.set('strokeColor', "#357EC7"); 
-                                    linkPath.set('strokeWeight', "4");
-                                } else {
-                                    // 0 < bw <100: BLACK
-                                    linkPath.set('strokeColor', "#000000");
-                                    linkPath.set('strokeWeight', "2");
-                                }
-                            }, "json");
-                        }, 0);
-                        // infowindow
-                        var infowindow = new google.maps.InfoWindow();
-                        // Assumptions:
-                        //  rx is traffic to link.start
-                        //  tx is traffic from link.start; i.e. to link.end                            
-                        var contentString = '<div class="info-content">'+
-                                             // '<h1>' + start.shortname + ' - ' +
-                                             // end.shortname + '</h1>' +
-                                            '<p class="rx">To <b>'+ start.shortname + '</b>:</p>' +
-                                            '<div id="rx_chart'+ link.id +'" class="link-chart"></div>' +
-                                            '<p class="tx">To <b>'+ end.shortname + '</b>:</p>' +
-                                            '<div id="tx_chart'+ link.id +'" class="link-chart"></div>';
-                        google.maps.event.addListener(linkPath, 'click', function(event) {
-                            infowindow.setPosition(event.latLng);
-                            infowindow.setContent(contentString);                                             
-                            infowindow.open(map); // open before drawing chart
-                            $.ajax({
-                                url: "{{ spark_rx_url }}"+link.id,
-                                success: function(rx_json) {
-                                    if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
-                                        var rx_data = new google.visualization.DataTable(rx_json); 
-                                        var rx_chart = new google.visualization.ImageSparkLine(document.getElementById('rx_chart'+link.id));
-                                        rx_chart.draw(rx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
-                                    }
-                                }
-                            });
-                            // // tx (same as above) 
-                            // // TODO refactor
-                            $.ajax({
-                                url: "{{ spark_tx_url }}"+link.id,
-                                success: function(tx_json) {
-                                    if (google.visualization &&  google.visualization.DataTable && google.visualization.ImageSparkLine) { 
-                                        var tx_data = new google.visualization.DataTable(tx_json);
-                                        var tx_chart = new google.visualization.ImageSparkLine(document.getElementById('tx_chart'+link.id));
-                                        tx_chart.draw(tx_data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
-                                    }
-                                }
-                            });
-                        });
-                    });
-                });
-                // add hosts
-                $.getJSON('/json/hosts/', function(hosts) {
+            function init_hosts(url, map, geocode) {
+                $.getJSON(url, function(hosts) {
                     $(hosts).each(function() {
                         var host = this;
                         var router = geocode[host.router]
@@ -428,20 +163,190 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         var end = [lat, lng]
                         var linkCoordinates = [
                             new google.maps.LatLng(start[0]+.1, start[1]),
-                            new google.maps.LatLng(end[0]+.1, end[1]),                        
+                            new google.maps.LatLng(end[0]+.1, end[1]),
                         ];
                         var linkPath = new google.maps.Polyline({
-                          path: linkCoordinates,
-                          strokeColor: "#4592B7",
-                          map: map,
-                          strokeOpacity: 0.6,
-                          strokeWeight: 1
+                        path: linkCoordinates,
+                        strokeColor: "#4592B7",
+                        map: map,
+                        strokeOpacity: 0.6,
+                        strokeWeight: 1
                         });
                     });
                 });
-            });
-            
-        }
+            }
+
+            function set_sparkline(url, id) {
+                $.ajax({
+                    url: "{{ spark_rx_url }}"+link.id,
+                    success: function(json) {
+                        if (google.visualization && google.visualization.DataTable && google.visualization.ImageSparkLine) {
+                            var data = new google.visualization.DataTable(json);
+                            var chart = new google.visualization.ImageSparkLine(document.getElementById(id));
+                            chart.draw(data, {width: 190, height: 63, showAxisLines: false,  showValueLabels: true, labelPosition: 'none'});
+                        }
+                    }
+                });
+            }
+
+            function make_linkinfo(linkPath, link, start, end) {
+                var infowindow = new google.maps.InfoWindow();
+                // Assumptions:
+                //  rx is traffic to link.start
+                //  tx is traffic from link.start; i.e. to link.end
+                var contentString = '<div class="info-content">'+
+                                    '<p class="rx">To <b>'+ start.shortname + '</b>:</p>' +
+                                    '<div id="rx_chart'+ link.id +'" class="link-chart"></div>' +
+                                    '<p class="tx">To <b>'+ end.shortname + '</b>:</p>' +
+                                    '<div id="tx_chart'+ link.id +'" class="link-chart"></div>';
+                google.maps.event.addListener(linkPath, 'click', function(event) {
+                    infowindow.setPosition(event.latLng);
+                    infowindow.setContent(contentString);
+                    infowindow.open(linkPath.map); // open before drawing chart
+                    set_sparkline("{{ spark_rx_url }}"+link.id, 'rx_chart'+link.id);
+                    set_sparkline("{{ spark_tx_url }}"+link.id, 'tx_chart'+link.id);
+                });
+            }
+
+            function init_links(url, map, geocode, link_obj) {
+                $.getJSON(url, function(links) {
+                    var linkColorInactive = "#666666";
+                    // draw links
+                    $(links).each(function() {
+                        var link = this;
+                        var start = geocode[link.start]
+                        var end = geocode[link.end]
+                        var latOffset = 1;
+                        var lngOffset = 0;
+
+                        if (link.id == 1) { // UCLA to SALT
+                            latOffset = 0.5; lngOffset = -0.5;
+                        }
+                        else if (link.id == 2) { // SALT to KANS
+                            latOffset = 1; lngOffset = 1;
+                        }
+                        else if (link.id == 3) { // SALT to HOUS
+                            latOffset = 0.5; lngOffset = 0.5;
+                        }
+                        else if (link.id == 4) { // KANS to HOUS
+                            latOffset = 0; lngOffset = -1;
+                        }
+                        else if (link.id == 6) { // KANS to ATLA
+                            latOffset = 0; lngOffset = -1;
+                        }
+                        else if (link.id == 7) { // KANS to WASH
+                            latOffset = 0.75; lngOffset = 0;
+                        }
+                        else if (link.id == 8) { // ATLA to WASH
+                            latOffset = 0.5; lngOffset = -0.5;
+                        }
+                        else if (link.id == 9) { // UCLA to PARC
+                            latOffset = 0.5; lngOffset = 0.5;
+                        }
+                        else if (link.id == 10) { // UCLA to UCI
+                            latOffset = 0.5; lngOffset = 0.5;
+                        }
+                        else if (link.id == 11) { // UCLA to UCSD
+                            latOffset = -1; lngOffset = 0;
+                        }
+                        else if (link.id == 13) { // ATLA to MEMPHIS
+                            latOffset = 0; lngOffset = -0.5;
+                        }
+                        else if (link.id == 15) { // KANS to WashU
+                            latOffset = 0; lngOffset = 0.5;
+                        }
+                        else if (link.id == 17) { // WASH to NEU
+                            latOffset = 0.5; lngOffset = -0.5;
+                        }
+                        else if (link.id == 18) { // UCLA to REMAP
+                            latOffset = 0.5; lngOffset = -0.5;
+                        }
+
+                        var linkCoordinates = [
+                            new google.maps.LatLng(start.position[0]+.1, start.position[1]),
+                            new google.maps.LatLng(end.position[0]+.1, end.position[1]),
+                        ];
+                        var linkCenterCoordinates = new google.maps.LatLng(
+                            ((start.position[0] + end.position[0])/2)+latOffset,
+                            ((start.position[1] + end.position[1])/2)+lngOffset
+                        );
+
+                        var linkPath = new google.maps.Polyline({
+                            path: linkCoordinates,
+                            strokeColor: linkColorInactive,
+                            map: map,
+                            strokeOpacity: 0.7,
+                            strokeColor: linkColorInactive,
+                            strokeWeight: 4
+                            });
+
+                        // traffic label
+                        var label = new MapLabel({
+                            text: '',
+                            position: linkCenterCoordinates,
+                            map: map,
+                            fontSize: 18,
+                            align: 'center',
+                            });
+                        link_obj[link.id] = {'path':linkPath, 'label':label};
+                        link_obj.query += link.id + '+';
+
+                        // infowindow
+                        make_linkinfo(linkPath, link, start, end);
+                    });
+                });
+            }
+
+            function update_links(links, period) {
+                $(document).everyTime(period, function (i) {
+                    $.getJSON("{{ bw_url }}"+links.query, function(data) {
+                        $(data).each(function() {
+                            var link = links[this.id];
+                            // update link label
+                            link.label.set('text', this.rx.toString() + '/' + this.tx.toString());
+
+                            // update link color
+                            var bw = parseFloat(this.rx + this.tx);
+                            if (bw > 2000 ) {
+                                link.path.set('strokeColor', "red");
+                                link.path.set('strokeWeight', "10");
+                            } else if (bw > 1000 ) {
+                                link.path.set('strokeColor', "orange");
+                                link.path.set('strokeWeight', "10");
+                            } else if (bw > 500 ) {
+                                link.path.set('strokeColor', "darkblue");
+                                link.path.set('strokeWeight', "8");
+                            } else if (bw > 250 ) {
+                                link.path.set('strokeColor', "blue");
+                                link.path.set('strokeWeight', "6");
+                            } else if (bw > 100) {
+                                link.path.set('strokeColor', "slateblue");
+                                link.path.set('strokeWeight', "4");
+                            } else {
+                                link.path.set('strokeColor', "black");
+                                link.path.set('strokeWeight', "2");
+                            }
+                        });
+                    }, "json");
+                }, 0);
+            }
+
+            function initialize() {
+                var map = init_map();
+                var link_obj = {query:''};
+
+                $.getJSON("/json/geocode" , function(geocode) {
+                    // add ndn routers
+                    init_routers('/json/routers/', map, geocode);
+                    // add hosts
+                    //init_hosts('/json/hosts/', map, geocode);
+                    // add links
+                    init_links('/json/links/', map, geocode, link_obj);
+                });
+
+                // make periodic job to update all the links
+                update_links(link_obj, {{ bw_update_interval }});
+            }
         </script>
     </head>
     <body onload="initialize()">
