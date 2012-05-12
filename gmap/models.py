@@ -108,7 +108,8 @@ class Bandwidth(models.Model):
     time = models.FloatField()
     rx = models.BigIntegerField()
     tx = models.BigIntegerField()
-    update_date = models.DateTimeField(default=datetime.now, editable=False)
+    update_date = models.DateTimeField(default=datetime.now,
+            editable=False, db_index=True)
 
     class Meta:
         ordering = ('-update_date', )
