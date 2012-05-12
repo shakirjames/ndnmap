@@ -70,11 +70,8 @@ class BandwidthManager(models.Manager):
             link: link id        
         """
         try:
-            # NOTE the order of the reads.
-            t0 = Bandwidth.objects.filter(link=link).order_by('-update_date')[1]
-            # At this point, a write may have occurred. Hence, its better
-            # to read the latest value after read penultimate one. 
-            t1 = Bandwidth.objects.filter(link=link).order_by('-update_date')[0]
+            # Get the two most recent entries
+            t1,t0 = self.filter(link=link).order_by('-update_date')[:2]
         except IndexError:
             return (0, 0)
         else:

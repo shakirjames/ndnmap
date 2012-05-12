@@ -52,11 +52,18 @@ def bw(request, link , time, rx, tx):
 
 def xhr_bw(request, link):
     """Return JSON data with link rate."""
-    import json    
-    rx, tx = Bandwidth.objects.rate(link)
-    rx = round(rx/BW_DIVISOR, BW_DECIMAL_POINTS)
-    tx = round(tx/BW_DIVISOR, BW_DECIMAL_POINTS)
-    data = json.dumps({'rx': rx, 'tx': tx})
+    import json
+    links = link.strip('+').split('+')
+    data = []
+    for link in links :
+        rx, tx = Bandwidth.objects.rate(link)
+        rx = round(rx/BW_DIVISOR, BW_DECIMAL_POINTS)
+        tx = round(tx/BW_DIVISOR, BW_DECIMAL_POINTS)
+        data.append( {'id':link, 'rx':rx, 'tx':tx} )
+    # Backward compatability
+    if len(data) == 1 :
+        data = data[0]
+    data = json.dumps(data)
     return HttpResponse(data, 'application/json')
 
 
