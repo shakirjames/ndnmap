@@ -72,7 +72,7 @@ class BandwidthManager(models.Manager):
         try:
             # Get the two most recent entries
             t1,t0 = self.filter(link=link).order_by('-update_date')[:2]
-        except IndexError:
+        except (IndexError, ValueError) :
             return (0, 0)
         else:
             #alive_int = datetime.now() - t1.update_date
