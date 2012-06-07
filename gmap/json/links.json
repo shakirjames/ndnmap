@@ -88,5 +88,85 @@
         "id": 18,
         "start": "REMAP",
         "end": "UCLA"
+    },
+    {
+        "id": 19,
+        "start": "REMAP",
+        "end": "PARC"
+    },
+    {
+        "id": 20,
+        "start": "REMAP",
+        "end": "UCI"
+    },
+    {
+        "id": 21,
+        "start": "UCSD",
+        "end": "UCI"
+    },
+    {
+        "id": 22,
+        "start": "PARC",
+        "end": "UIUC"
+    },
+    {
+        "id": 23,
+        "start": "PARC",
+        "end": "CSU"
+    },
+    {
+        "id": 24,
+        "start": "UCLA",
+        "end": "UA"
+    },
+    {
+        "id": 25,
+        "start": "UCSD",
+        "end": "UA"
+    },
+    {
+        "id": 26,
+        "start": "UA",
+        "end": "CSU"
+    },
+    {
+        "id": 27,
+        "start": "CSU",
+        "end": "WashU"
+    },
+    {
+        "id": 28,
+        "start": "UA",
+        "end": "UM"
+    },
+    {
+        "id": 29,
+        "start": "CSU",
+        "end": "UM"
+    },
+    {
+        "id": 30,
+        "start": "UIUC",
+        "end": "WashU"
+    },
+    {
+        "id": 31,
+        "start": "UM",
+        "end": "WashU"
+    },
+    {
+        "id": 32,
+        "start": "UIUC",
+        "end": "NEU"
+    },
+    {
+        "id": 33,
+        "start": "UM",
+        "end": "NEU"
+    },
+    {
+        "id": 34,
+        "start": "CSU",
+        "end": "UCLA"
     }
 ]
