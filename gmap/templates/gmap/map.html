@@ -89,46 +89,52 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 var map = new google.maps.Map($("#map_canvas")[0], myOptions);
                 map.setOptions({styles: stylesArray});
                 var infowindow = new google.maps.InfoWindow();
-                // title (use a marker because labels are not clickable)
-                var marker = new google.maps.Marker({
+                // draw map title as a lable
+                var label = new MapLabel({
+                    text: 'NDN Testbed',
                     position: new google.maps.LatLng(45, -96.6),
                     map: map,
-                    title: '',
-                    icon: '{{ STATIC_URL }}img/ndn_testbed.png'
-                    });
-                google.maps.event.addListener(marker, 'click', function() {
-                    window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
-                    });
+                    fontSize: 48,
+                    align: 'center',
+                });
                 return map;
             }
-
             function init_routers(url, map, geocode) {
                 $.getJSON(url, function(routers) {
                     var bounds = new google.maps.LatLngBounds();
                     $(routers).each(function() {
                         var router = geocode[this];
+                        var lat = router.position[0];
+                        var lng = router.position[1];
                         if (router.backbone == true) {
-                            icon = '{{ STATIC_URL }}img/circle.png';
-                        }
+                            // draw circle
+                            var marker = new google.maps.Circle({
+                                center: new google.maps.LatLng(lat, lng),
+                                radius: 50000, // 50 km
+                                strokeColor: "#000000",
+                                strokeOpacity: 0.75,
+                                strokeWeight: 0.5,
+                                fillColor: "#A73722",
+                                fillOpacity: 0.85,
+                                zIndex: 1,
+                                map: map
+                            });                            
+                        } 
                         else {
-                            icon = '{{ STATIC_URL }}img/rectangle.png';
+                            // draw rectangle
+                            var sw = new google.maps.LatLng(lat-0.4, lng-0.5)
+                            var ne = new google.maps.LatLng(lat+0.4, lng+0.5)
+                            var marker = new google.maps.Rectangle({
+                                bounds: new google.maps.LatLngBounds(sw, ne),
+                                strokeColor: "#000000",
+                                strokeOpacity: 0.5,
+                                strokeWeight: 1,
+                                fillColor: "#52A5C2",
+                                fillOpacity: 1.0,
+                                zIndex: 1,
+                                map: map
+                            });
                         }
-                        lat = router.position[0];
-                        lng = router.position[1];
-                        var marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(lat, lng),
-                            map: map,
-                            title: router.description,
-                            icon: icon
-                        });
-                        var mapLabel = new MapLabel({
-                            text: router.shortname,
-                            position: new google.maps.LatLng(lat-.1, lng),
-                            map: map,
-                            fontSize: 13,
-                            align: 'center',
-                            minZoom: 4,
-                        });
                         bounds.extend(new google.maps.LatLng(lat, lng));
                         var content = '<div class="info-content">'+
                             '<h1>' + router.name + '</h1><p>'+
