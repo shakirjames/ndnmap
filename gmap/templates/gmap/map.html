@@ -90,6 +90,22 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 map.setOptions({styles: stylesArray});
                 var infowindow = new google.maps.InfoWindow();
                 // draw map title as a lable
+                // draw rectangle
+                var sw = new google.maps.LatLng(42.6, -109.6)
+                var ne = new google.maps.LatLng(45.1, -83.1)
+                var marker = new google.maps.Rectangle({
+                    bounds: new google.maps.LatLngBounds(sw, ne),
+                    strokeColor: "#000000",
+                    strokeOpacity: 0.0,
+                    strokeWeight: 1,
+                    fillColor: "#FFFFFF",
+                    fillOpacity: 0.0,
+                    zIndex: 1,
+                    map: map
+                });
+                google.maps.event.addListener(marker, 'click', function() {
+                    window.open('http://www.cs.arizona.edu/people/yifengl/tbs.html','_blank')
+                    });
                 var label = new MapLabel({
                     text: 'NDN Testbed',
                     position: new google.maps.LatLng(45, -96.6),
