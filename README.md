@@ -26,11 +26,18 @@ Clone `ndnmap`.
 
 Install the packages in ``deploy/requirements.txt``.
 
-  * ``pip`` (and optionally [virtualenv](http://mathematism.com/2009/07/30/presentation-pip-and-virtualenv/)) simplifies the process
+  * ``pip`` (and optionally [virtualenv][1]) simplifies the process
 
         sudo easy_install -U pip # requires setuptools
         pip install -r deploy/requirements.txt
         
+
+
+Obtain a [key for the Google maps API][2] and enter the API key in
+`ndnmap/settings.py`:
+
+    # API key for the Google Maps applications
+    GMAP_API_KEY='XXX'
 
 Local Server
 ----------------
@@ -45,14 +52,14 @@ Open the home page in your browser: http://localhost:8000/
 EC2 Deployment
 --------------
 
-In the [AWS Management Console](http://console.aws.amazon.com/),
+In the [AWS Management Console][3],
   
   * create a `webserver` EC2 security group that allows HTTP access (port 80).
   * create a S3 bucket, for example `ndnmap-media-<your name>` (for static files).
 
 In `ndnmap/settting.py`, change `AWS_STORAGE_BUCKET_NAME` to your S3 bucket
 
-[Fabric](http://fabfile.org/) allow us to automate the install of 
+[Fabric][4] allow us to automate the install of 
 a LAMP (Linux Apache MySQL Python) stack on EC2. 
 
 The ndnmap fab file (fabric script) provides a set of admin task.
@@ -60,7 +67,7 @@ See the list of admin tasks:
 
     fab --list 
     
-The following assumes you have set up [upload your personal ssh keys to EC2](http://alestic.com/2010/10/ec2-ssh-keys).
+The following assumes you have set up [upload your personal ssh keys to EC2][5].
 If you are using  an ssh keypair from amazon, include it as a parameter
     
     fab -i EC2KEYPAIR
@@ -94,9 +101,8 @@ Field descriptions
   
 Settings
 --------
-In the `ndnmap/settings.py`, there are two settings:
+Other relevant but optional settings in `ndnmap/settings.py` follow.
 
-    
     # Show 0 bandwidth if time since last update > GMAP_LINK_ALIVE_INTERVAL (s)
     GMAP_LINK_ALIVE_INTERVAL = 10 
     
@@ -105,7 +111,7 @@ In the `ndnmap/settings.py`, there are two settings:
     
     # Store static file in S3 bucket
     AWS_STORAGE_BUCKET_NAME = 'ndnmap-media-<your name>'
-
+    
 
 Testing 
 -------
@@ -128,3 +134,8 @@ Remove all `gmap` records from the database
 
     fab reset
 
+[1]: http://mathematism.com/2009/07/30/presentation-pip-and-virtualenv/
+[2]: http://console.aws.amazon.com/
+[3]: https://developers.google.com/maps/documentation/javascript/tutorial#api_key
+[4]: http://fabfile.org/
+[5]: http://alestic.com/2010/10/ec2-ssh-keys

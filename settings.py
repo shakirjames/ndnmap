@@ -170,7 +170,9 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 # set AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID in settings_local
 
-# gmap
+# Google Maps
+# API key for the Google Maps applications
+GMAP_API_KEY='AIzaSyCSWG9inlvz_Wn2fVwrwd3yOS5IiJqaJwI'
 # Assume zero bandwidth if time since last update > GMAP_LINK_ALIVE_INTERVAL
 GMAP_LINK_ALIVE_INTERVAL = 10
 # Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL

@@ -39,6 +39,7 @@ from django.template import RequestContext
 from django.views.generic import TemplateView
 from utils import gviz_api
 
+MAP_API_KEY = getattr(settings, 'GMAP_API_KEY', '')
 BW_UPDATE_INTERVAL = getattr(settings, 'GMAP_BW_UPDATE_INTERVAL', 5)
 BW_DIVISOR = 1000.0 # Kbps
 BW_DECIMAL_POINTS=1
@@ -96,6 +97,7 @@ class MapView(TemplateView):
 
     def render_to_response(self, context):
         context = RequestContext(self.request, {
+            'api_key': MAP_API_KEY,
             'bw_url': reverse('xhr_bw', args=(0, )).split('0')[0],
             'spark_rx_url': reverse('xhr_spark_rx', args=(0, )).split('0')[0],
             'spark_tx_url': reverse('xhr_spark_tx', args=(0, )).split('0')[0],
