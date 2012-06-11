@@ -135,6 +135,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 zIndex: 1,
                                 map: map
                             });                            
+                            google.maps.event.addListener(marker, 'click', function() {
+                                window.open(router.site,'_blank')
+                                });
                         } 
                         else {
                             // draw rectangle
@@ -150,6 +153,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 zIndex: 1,
                                 map: map
                             });
+                            google.maps.event.addListener(marker, 'click', function() {
+                                window.open(router.site,'_blank')
+                                });
                         }
                         var mapLabel = new MapLabel({
                             text: router.shortname,
@@ -160,16 +166,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             minZoom: 4,
                         });
                         bounds.extend(new google.maps.LatLng(lat, lng));
-                        var content = '<div class="info-content">'+
-                            '<h1>' + router.name + '</h1><p>'+
-                            '<a target="_blank" href="'+ router.site + '">'+
-                            router.site + '</a>'+
-                            '</p></div>';
-                        google.maps.event.addListener(marker, 'click',
-                            function() {
-                                infowindow.setContent(contentString)
-                                infowindow.open(map, marker);
-                            });
                     });
                     // Zoom To Fit All Markers on Google Maps API v3
                     // http://blog.shamess.info/2009/09/29/zoom-to-fit-all-markers-on-google-maps-api-v3/
