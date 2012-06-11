@@ -47,7 +47,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
         </script>
         <script type="text/javascript"
-            src="http://maps.googleapis.com/maps/api/js?v=3.7&key=AIzaSyCSWG9inlvz_Wn2fVwrwd3yOS5IiJqaJwI&sensor=false">
+            src="http://maps.googleapis.com/maps/api/js?v=3.9&key=AIzaSyCSWG9inlvz_Wn2fVwrwd3yOS5IiJqaJwI&sensor=false">
         </script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timers.min.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel.min.js"></script>
@@ -135,6 +135,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                 map: map
                             });
                         }
+                        var mapLabel = new MapLabel({
+                            text: router.shortname,
+                            position: new google.maps.LatLng(lat-.5, lng),
+                            map: map,
+                            fontSize: 13,
+                            align: 'center',
+                            minZoom: 4,
+                        });
                         bounds.extend(new google.maps.LatLng(lat, lng));
                         var content = '<div class="info-content">'+
                             '<h1>' + router.name + '</h1><p>'+
@@ -267,6 +275,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         else if (link.id == 18) { // UCLA to REMAP
                             latOffset = 0.5; lngOffset = -0.5;
                         }
+                        latOffset = 0; lngOffset = 0;
 
                         var linkCoordinates = [
                             new google.maps.LatLng(start.position[0]+.1, start.position[1]),
