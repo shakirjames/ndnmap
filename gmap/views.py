@@ -45,11 +45,10 @@ BW_DIVISOR = 1000.0 # Kbps
 BW_DECIMAL_POINTS=1
 
 def bw(request, link , time, rx, tx):
-    """Add bandwidth reports"""
+    """Add bandwidth reports."""
     # WARNING: This is not safe!
     Bandwidth.objects.create(link=link, time=time, rx=rx, tx=tx)
     return HttpResponse('Got it.\n')
-
 
 def xhr_bw(request, link):
     """Return JSON data with link rate."""
@@ -67,30 +66,12 @@ def xhr_bw(request, link):
     data = json.dumps(data)
     return HttpResponse(data, 'application/json')
 
-
-def json(request, file):
-    f = '{0}/gmap/json/{1}.json'.format(settings.SITE_ROOT, file)    
-    try:
-        data = open(f, 'r').read()
-    except IOError:
-        raise Http404
-    return HttpResponse(data, 'application/json')
-
 def _spark_json(link, field):
     data = ({field: (round(v/BW_DIVISOR, BW_DECIMAL_POINTS))}
         for v in Bandwidth.objects.rates(field, link))
     data_table = gviz_api.DataTable({field:('number', 'Bandwidth')})
     data_table.LoadData(data)
     return data_table.ToJSon()
-    
-def xhr_spark_rx(request, link):
-    """Return rx traffic in bits as JSON data"""
-    return HttpResponse(_spark_json(link, 'rx'), 'application/json')
-
-def xhr_spark_tx(request, link):
-    """Return rx traffic in bits as JSON data"""
-    return HttpResponse(_spark_json(link, 'tx'), 'application/json')
-
 
 class MapView(TemplateView):
     template_name='gmap/map.html'
@@ -117,9 +98,32 @@ class SparkLine(TemplateView):
         })
         return super(SparkLine, self).render_to_response(context)
 
+###
+### Debug views
+###
+def xhr_spark_rx(request, link):
+    """Return rx traffic in bits as JSON data"""
+    # http://ndnmap.arl.wustl.edu/xhr_sparkline/rx/1
+    return HttpResponse(_spark_json(link, 'rx'), 'application/json')
+
+def xhr_spark_tx(request, link):
+    """Return rx traffic in bits as JSON data"""
+    # http://ndnmap.arl.wustl.edu/xhr_sparkline/tx/1
+    return HttpResponse(_spark_json(link, 'tx'), 'application/json')
+
+def json(request, file):
+    """Return the content of a json file."""
+    # http://ndnmap.arl.wustl.edu/json/ec2regions/
+    f = '{0}/gmap/json/{1}.json'.format(settings.SITE_ROOT, file)    
+    try:
+        data = open(f, 'r').read()
+    except IOError:
+        raise Http404
+    return HttpResponse(data, 'application/json')
 
 class DebugView(TemplateView):
-    # simple view for django debug toolbar to show sql query
+    # http://ndnmap.arl.wustl.edu/debug
+    # simple view for django debug toolbar to show SQL query
     template_name='gmap/debug.html'
         
     def render_to_response(self, context):
