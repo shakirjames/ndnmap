@@ -50,6 +50,16 @@ def bw(request, link , time, rx, tx):
     Bandwidth.objects.create(link=link, time=time, rx=rx, tx=tx)
     return HttpResponse('Got it.\n')
 
+def json(request, file):
+    """Return the content of a json file."""
+    # http://ndnmap.arl.wustl.edu/json/ec2regions/
+    f = '{0}/gmap/json/{1}.json'.format(settings.SITE_ROOT, file)    
+    try:
+        data = open(f, 'r').read()
+    except IOError:
+        raise Http404
+    return HttpResponse(data, 'application/json')
+
 def xhr_bw(request, link):
     """Return JSON data with link rate."""
     import json
@@ -98,6 +108,7 @@ class SparkLine(TemplateView):
         })
         return super(SparkLine, self).render_to_response(context)
 
+
 ###
 ### Debug views
 ###
@@ -110,16 +121,6 @@ def xhr_spark_tx(request, link):
     """Return rx traffic in bits as JSON data"""
     # http://ndnmap.arl.wustl.edu/xhr_sparkline/tx/1
     return HttpResponse(_spark_json(link, 'tx'), 'application/json')
-
-def json(request, file):
-    """Return the content of a json file."""
-    # http://ndnmap.arl.wustl.edu/json/ec2regions/
-    f = '{0}/gmap/json/{1}.json'.format(settings.SITE_ROOT, file)    
-    try:
-        data = open(f, 'r').read()
-    except IOError:
-        raise Http404
-    return HttpResponse(data, 'application/json')
 
 class DebugView(TemplateView):
     # http://ndnmap.arl.wustl.edu/debug
