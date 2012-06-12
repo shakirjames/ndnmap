@@ -90,7 +90,7 @@
     "REMAP": {
         "name": "Remap at University of California, Los Angeles",
         "shortname": "REMAP",
-        "site": "http://spurs.cs.ucla.edu:9695/",
+        "site": "http://borges.metwi.ucla.edu:9695/",
         "backbone": false,
         "_real_position": [ 34.07282250, -118.43873980 ],
         "position": [ 34.4, -122.14807210 ]
