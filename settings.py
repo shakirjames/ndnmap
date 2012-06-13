@@ -172,7 +172,7 @@ STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # Google Maps
 # API key for the Google Maps applications
-GMAP_API_KEY='AIzaSyCSWG9inlvz_Wn2fVwrwd3yOS5IiJqaJwI'
+GMAP_API_KEY='AIzaSyDqM6bDLkXyXgK-8L6aFnYdHpuHK-lLfMk'
 # Assume zero bandwidth if time since last update > GMAP_LINK_ALIVE_INTERVAL
 GMAP_LINK_ALIVE_INTERVAL = 10
 # Update bandwidth on map every GMAP_BW_UPDATE_INTERVAL
