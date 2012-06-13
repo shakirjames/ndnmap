@@ -19,5 +19,5 @@ urlpatterns = patterns('gmap.views',
     # debug
     url(r'^xhr_sparkline/rx/(?P<link>\d+)/$', 'xhr_spark_rx', name='xhr_spark_rx'),
     url(r'^xhr_sparkline/tx/(?P<link>\d+)/$', 'xhr_spark_tx', name='xhr_spark_tx'),
-    url(r'^debug/$', DebugView.as_view()),
+    #url(r'^debug/$', DebugView.as_view()),
 )
