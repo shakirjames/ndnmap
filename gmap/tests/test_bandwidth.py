@@ -1,4 +1,4 @@
-# Copyright (c) 2011 Shakir James and Washington University in St. Louis.
+# Copyright (c) 2012 Shakir James and Washington University in St. Louis.
 # All rights reserved
 
 """gmap tests"""

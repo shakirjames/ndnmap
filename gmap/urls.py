@@ -1,4 +1,4 @@
-# Copyright (c) 2011 Shakir James and Washington University in St. Louis.
+# Copyright (c) 2012 Shakir James and Washington University in St. Louis.
 # See LICENSE for details.
 
 from django.conf.urls.defaults import patterns, url
