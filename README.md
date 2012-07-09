@@ -135,7 +135,7 @@ Remove all `gmap` records from the database
     fab reset
 
 [1]: http://mathematism.com/2009/07/30/presentation-pip-and-virtualenv/
-[2]: http://console.aws.amazon.com/
-[3]: https://developers.google.com/maps/documentation/javascript/tutorial#api_key
+[2]: https://developers.google.com/maps/documentation/javascript/tutorial#api_key
+[3]: http://console.aws.amazon.com/
 [4]: http://fabfile.org/
 [5]: http://alestic.com/2010/10/ec2-ssh-keys
