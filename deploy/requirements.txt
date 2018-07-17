@@ -3,7 +3,7 @@ Fabric==1.4.0
 boto==2.2.1
 django-debug-toolbar==0.9.4
 django-storages==1.1.4
-pycrypto==2.6.1
+# pycrypto==2.6.1
 python-dateutil==1.5
 ssh==1.7.13
 wsgiref==0.1.2
